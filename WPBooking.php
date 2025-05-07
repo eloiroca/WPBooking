@@ -52,6 +52,106 @@ function shortcode_wpbooking_calendar() {
     return $content;
 }
 
+add_action('rest_api_init', function () {
+    register_rest_route('wpbooking/v1', '/events', [
+        'methods'  => 'GET',
+        'callback' => 'wpbooking_get_events',
+        'permission_callback' => '__return_true',
+    ]);
+});
+
+/************************************************************
+ * Registrar API REST Events
+ ************************************************************/
+function wpbooking_get_events($request) {
+    $start = sanitize_text_field($request->get_param('start'));
+    $end = sanitize_text_field($request->get_param('end'));
+
+    // Genera los eventos entre $start y $end
+    $events = [
+        [
+            'title' => 'BÀSICA',
+            'start' => '2025-05-10',
+            'end' => '2025-05-10',
+            'url' => 'https://example.com/',
+            'color' => '#bad7b4',
+            'textColor' => '#000000'
+        ],
+        [
+            'title' => 'PRÈMIUM',
+            'start' => '2025-05-10',
+            'end' => '2025-05-10',
+            'url' => 'https://example.com/',
+            'color' => '#fff6c9',
+            'textColor' => '#000000'
+        ],
+        [
+            'title' => 'EXTRAORDINARIA',
+            'start' => '2025-05-10',
+            'end' => '2025-05-10',
+            'url' => 'https://example.com/',
+            'color' => '#bbdffb',
+            'textColor' => '#000000'
+        ],
+        [
+            'title' => 'EXTRAORDINARIA',
+            'start' => '2025-05-10',
+            'end' => '2025-05-10',
+            'url' => 'https://example.com/',
+            'color' => '#bbdffb',
+            'textColor' => '#000000'
+        ],
+        [
+            'title' => 'EXTRAORDINARIA',
+            'start' => '2025-05-10',
+            'end' => '2025-05-10',
+            'url' => 'https://example.com/',
+            'color' => '#bbdffb',
+            'textColor' => '#000000'
+        ],
+        [
+            'title' => 'EXTRAORDINARIA',
+            'start' => '2025-05-10',
+            'end' => '2025-05-10',
+            'url' => 'https://example.com/',
+            'color' => '#bbdffb',
+            'textColor' => '#000000'
+        ],
+        [
+            'title' => 'PRÈMIUM',
+            'start' => '2025-05-15',
+            'end' => '2025-05-19',
+            'url' => 'https://example.com/',
+            'color' => '#fff6c9',
+            'textColor' => '#000000'
+        ],
+        [
+            'title' => 'EXHAURIDES',
+            'start' => '2025-05-21',
+            'end' => '2025-05-24',
+            'color' => '#e08e88',
+            'textColor' => '#000000'
+        ],
+        [
+            'title' => 'EXTRAORDINARIA',
+            'start' => '2025-05-25',
+            'end' => '2025-05-28',
+            'color' => '#bbdffb',
+            'textColor' => '#000000'
+        ],
+        [
+            'title' => 'EXTRAORDINARIA',
+            'start' => '2025-06-25',
+            'end' => '2025-05-28',
+            'color' => '#bbdffb',
+            'textColor' => '#000000'
+        ],
+    ];
+
+    return rest_ensure_response($events);
+}
+
+
 
 
 
