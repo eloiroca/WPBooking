@@ -1,0 +1,16 @@
+#wpbooking-calendar {
+    width: 100%;
+}
+#wpbooking-calendar table {
+    margin: 0 0 0 !important;
+}
+#wpbooking-calendar .fc-h-event .fc-event-title-container {
+    text-align: center;
+}
+.fc .fc-daygrid-day-number {
+    color: black;
+    font-weight: 500;
+}
+.fc .fc-daygrid-day-top {
+    flex-direction: row;
+}
