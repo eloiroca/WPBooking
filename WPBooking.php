@@ -23,6 +23,32 @@ add_action('plugins_loaded', function() {
 define('START_CALENDAR_WPBOOKING', date('Y-m-01'));
 define('END_CALENDAR_WPBOOKING', date('Y-m-01', strtotime('+3 months')));
 
+/************************************************************
+ * Funciones de traducción
+ ************************************************************/
+if (!function_exists('__wpb')) {
+    function wpbooking_translations_array() {
+        static $translations = null;
+
+        if ($translations !== null) return $translations;
+
+        $lang = defined('LANG_WPBOOKING') ? LANG_WPBOOKING : 'es';
+        $path = DIRECTORI_PLUGIN_WPBOOKING . "lang/$lang.php";
+
+        if (!file_exists($path)) {
+            $path = DIRECTORI_PLUGIN_WPBOOKING . "lang/es.php";
+        }
+
+        $translations = include $path;
+        return $translations;
+    }
+
+    function __wpb($key) {
+        $translations = wpbooking_translations_array();
+        return isset($translations[$key]) ? $translations[$key] : $key;
+    }
+}
+
 
 //include_once(DIRECTORI_PLUGIN_WPBOOKING . 'class/WPBOOKING.php');
 
@@ -78,8 +104,8 @@ add_action('admin_menu', function () {
 
     add_submenu_page(
         'wpbooking',
-        'Calendari',
-        'Calendari',
+        __wpb('calendar_title'),
+        __wpb('calendar_title'),
         'manage_options',
         'wpbooking-calendar',
         'wpbooking_calendar_page'
