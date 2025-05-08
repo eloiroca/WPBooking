@@ -1,6 +1,20 @@
 <?php
 return [
     'Events' => 'Esdeveniments',
-    'save_button' => 'Guardar',
-    'delete_button' => 'Eliminar',
+    'Event' => 'Esdeveniment',
+    'Add new' => 'Afegir nou',
+    'Add new event' => 'Afegir nou esdeveniment',
+    'Edit event' => 'Editar esdeveniment',
+    'New event' => 'Nou esdeveniment',
+    'View event' => 'Veure esdeveniment',
+    'Search events' => 'Cercar esdeveniments',
+    'No events found' => 'No s\'han trobat esdeveniments',
+    'Yes' => 'Sí',
+    'No' => 'No',
+    'Calendar title' => 'Títol al calendari',
+    'Event color' => 'Color de l\'esdeveniment',
+    'Enabled' => 'Habilitat',
+    'Event text color' => 'Color del text de l\'esdeveniment',
+    'Start date' => 'Data d\'inici',
+    'End date' => 'Data de finalització',
 ];

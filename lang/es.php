@@ -1,6 +1,20 @@
 <?php
 return [
     'Events' => 'Eventos',
-    'save_button' => 'Guardar',
-    'delete_button' => 'Eliminar',
+    'Event' => 'Evento',
+    'Add new' => 'Añadir nuevo',
+    'Add new event' => 'Añadir nuevo evento',
+    'Edit event' => 'Editar evento',
+    'New event' => 'Nuevo evento',
+    'View event' => 'Ver evento',
+    'Search events' => 'Buscar eventos',
+    'No events found' => 'No se encontraron eventos',
+    'Yes' => 'Sí',
+    'No' => 'No',
+    'Calendar title' => 'Título en el calendario',
+    'Event color' => 'Color del evento',
+    'Enabled' => 'Habilitado',
+    'Event text color' => 'Color del texto del evento',
+    'Start date' => 'Fecha de inicio',
+    'End date' => 'Fecha de finalización',
 ];

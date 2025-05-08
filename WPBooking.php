@@ -104,11 +104,10 @@ add_action('admin_menu', function () {
 
     add_submenu_page(
         'wpbooking',
-        __wpb('calendar_title'),
-        __wpb('calendar_title'),
+        __wpb('Events'),
+        __wpb('Events'),
         'manage_options',
-        'wpbooking-calendar',
-        'wpbooking_calendar_page'
+        'edit.php?post_type=wpbooking_event'
     );
 });
 
@@ -120,10 +119,100 @@ function wpbooking_menu_page() {
     echo $content;
 }
 
-// Página del calendario
-function wpbooking_calendar_page() {
-    // Todoo
+/************************************************************
+ * Registrar CPT Eventos
+ ************************************************************/
+// Registrar CPT
+add_action('init', function () {
+    register_post_type('wpbooking_event', array(
+        'labels' => array(
+            'name' => __wpb('Events'),
+            'singular_name' => __wpb('Event'),
+            'add_new' => __wpb('Add new'),
+            'add_new_item' => __wpb('Add new event'),
+            'edit_item' => __wpb('Edit event'),
+            'new_item' => __wpb('New event'),
+            'view_item' => __wpb('View event'),
+            'search_items' => __wpb('Search events'),
+            'not_found' => __wpb('No events found'),
+            //'menu_name' => 'Eventos'
+        ),
+        'public' => true,
+        //'show_ui' => true,
+        'show_in_menu' => false,
+        //'show_in_menu' => 'wpbooking', // Aquí lo enlazas como submenú
+        'supports' => array('title', 'editor', 'custom-fields'),
+        'menu_position' => 5,
+        'menu_icon' => 'dashicons-calendar',
+    ));
+});
+
+// Registrar Metaboxes
+add_action('add_meta_boxes', function () {
+    add_meta_box('wpbooking_event_meta', 'Datos del Evento', 'wpbooking_event_meta_callback', 'wpbooking_event', 'normal', 'default');
+});
+
+function wpbooking_event_meta_callback($post) {
+    $calendar_title = get_post_meta($post->ID, '_calendar_title', true);
+    $color = get_post_meta($post->ID, '_color', true);
+    $text_color = get_post_meta($post->ID, '_text_color', true);
+    $start_date = get_post_meta($post->ID, '_start_date', true);
+    $end_date = get_post_meta($post->ID, '_end_date', true);
+    $enabled = get_post_meta($post->ID, '_enabled', true);
+    $exceptions = get_post_meta($post->ID, '_exceptions', true);
+    ?>
+    <label><?php echo __wpb('Calendar title'); ?>: <input type="text" name="calendar_title" value="<?= esc_attr($calendar_title) ?>" style="width: 100%;" /></label><br><br>
+    <label><?php echo __wpb('Event color'); ?>: <input type="color" name="color" value="<?= esc_attr($color ?: '#3788d8') ?>" /></label><br><br>
+    <label><?php echo __wpb('Event text color'); ?>: <input type="color" name="text_color" value="<?= esc_attr($text_color ?: '#000000') ?>" /></label><br><br>
+    <label><?php echo __wpb('Start date'); ?>: <input type="date" name="start_date" value="<?= esc_attr($start_date) ?>" /></label><br><br>
+    <label><?php echo __wpb('End date'); ?>: <input type="date" name="end_date" value="<?= esc_attr($end_date) ?>" /></label><br><br>
+    <label><?php echo __wpb('Enabled'); ?>:
+        <input type="checkbox" name="enabled" value="1" <?= checked($enabled, '1', false) ?> />
+    </label><br><br>
+    <label>Fechas excepcionales (JSON):<br>
+        <textarea name="exceptions" rows="4" cols="40"><?= esc_textarea($exceptions) ?></textarea>
+    </label>
+    <?php
 }
+
+// Guardar datos del evento
+add_action('save_post_wpbooking_event', function ($post_id) {
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+
+    update_post_meta($post_id, '_calendar_title', sanitize_text_field($_POST['calendar_title'] ?? ''));
+    update_post_meta($post_id, '_color', sanitize_hex_color($_POST['color'] ?? ''));
+    update_post_meta($post_id, '_text_color', sanitize_hex_color($_POST['text_color'] ?? ''));
+    update_post_meta($post_id, '_start_date', sanitize_text_field($_POST['start_date'] ?? ''));
+    update_post_meta($post_id, '_end_date', sanitize_text_field($_POST['end_date'] ?? ''));
+    update_post_meta($post_id, '_enabled', isset($_POST['enabled']) ? '1' : '0');
+    update_post_meta($post_id, '_exceptions', wp_kses_post($_POST['exceptions'] ?? ''));
+});
+
+// Añadir columnas personalizadas
+add_filter('manage_wpbooking_event_posts_columns', function($columns) {
+    $columns['calendar_title'] = __wpb('Calendar title');
+    $columns['event_color'] = __wpb('Event color');
+    $columns['enabled'] = __wpb('Enabled');
+    return $columns;
+});
+
+// Mostrar los valores de las columnas personalizadas
+add_action('manage_wpbooking_event_posts_custom_column', function($column, $post_id) {
+    if ($column === 'calendar_title') {
+        echo esc_html(get_post_meta($post_id, '_calendar_title', true));
+    }
+
+    if ($column === 'event_color') {
+        $color = get_post_meta($post_id, '_color', true);
+        echo '<span style="display:inline-block;width:20px;height:20px;background:' . esc_attr($color) . ';border:1px solid #ccc;"></span>';
+    }
+
+    if ($column === 'enabled') {
+        $enabled = get_post_meta($post_id, '_enabled', true);
+        echo $enabled ? __wpb('Yes') : __wpb('No');
+    }
+}, 10, 2);
+
 
 /************************************************************
  * Registrar Shortcodes
