@@ -2,7 +2,9 @@
 $eventos = get_posts([
     'post_type' => 'wpbooking_event',
     'post_status' => 'publish',
-    'numberposts' => -1
+    'numberposts' => -1,
+    'meta_key' => '_enabled',
+    'meta_value' => '1'
 ]);
 ?>
 

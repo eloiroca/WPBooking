@@ -874,7 +874,9 @@
   font-weight: bold;
 }
 .alertify-notifier .ajs-message.ajs-error {
-  background: rgba(217, 92, 92, 0.95);
+  background: rgba(250, 40, 40, 0.95);
+  color: black;
+  font-weight: bold;
 }
 .alertify-notifier .ajs-message.ajs-warning {
   background: rgba(252, 248, 215, 0.95);

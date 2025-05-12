@@ -17,16 +17,22 @@ add_action('init', function () {
         'public' => true,
         //'show_ui' => true,
         'show_in_menu' => false,
-        //'show_in_menu' => 'wpbooking', // Aquí lo enlazas como submenú
         'supports' => array('title', 'editor', 'custom-fields'),
         'menu_position' => 5,
         'menu_icon' => 'dashicons-calendar',
+        'rewrite' => true,
+        'has_archive' => true,
     ));
 });
 
 // Registrar Metaboxes
 add_action('add_meta_boxes', function () {
-    add_meta_box('wpbooking_event_meta', 'Datos del Evento', 'wpbooking_event_meta_callback', 'wpbooking_event', 'normal', 'default');
+    add_meta_box('wpbooking_event_meta',
+     __wpb('Event settings'),
+  'wpbooking_event_meta_callback',
+   'wpbooking_event',
+    'side'
+     );
     // Titulo del evento
     add_meta_box(
         'wpbooking_event_title_metabox',
@@ -51,26 +57,29 @@ add_action('add_meta_boxes', function () {
         'wpbooking_event',
         'side'
     );
-    // Dias excepcionales
-    add_meta_box(
-        'wpbooking_event_exceptions_metabox',
-        __('Fechas Excepcionales', 'wpbooking'),
-        'wpbooking_event_exceptions_metabox_callback',
-        'wpbooking_event',
-        'side'
-    );
 });
 
 function wpbooking_event_meta_callback($post) {
-    $start_date = get_post_meta($post->ID, '_start_date', true);
-    $end_date = get_post_meta($post->ID, '_end_date', true);
+    $price = get_post_meta($post->ID, '_price', true);
+    $hour_start = get_post_meta($post->ID, '_hour_start', true);
+    $hour_end = get_post_meta($post->ID, '_hour_end', true);
     $enabled = get_post_meta($post->ID, '_enabled', true);
+    $can_reserve = get_post_meta($post->ID, '_can_reserve', true);
     ?>
-    <label><?php echo __wpb('Start date'); ?>: <input type="date" name="start_date" value="<?= esc_attr($start_date) ?>" /></label><br><br>
-    <label><?php echo __wpb('End date'); ?>: <input type="date" name="end_date" value="<?= esc_attr($end_date) ?>" /></label><br><br>
+    <label><?php echo __wpb('Price'); ?>:
+    <input type="text" name="price" value="<?php echo esc_attr($price); ?>" />
+    </label><br><br>
+    <label><?php echo __wpb('Hour start'); ?>:
+        <input type="time" name="hour_start" value="<?php echo esc_attr($hour_start); ?>" />
+    </label><br><br>
+    <label><?php echo __wpb('Hour end'); ?>:
+        <input type="time" name="hour_end" value="<?php echo esc_attr($hour_end); ?>" />
+    </label><br><br>
     <label><?php echo __wpb('Enabled'); ?>:
         <input type="checkbox" name="enabled" value="1" <?= checked($enabled, '1', false) ?> />
     </label><br><br>
+    <label><?php echo __wpb('Can reserve'); ?>:
+        <input type="checkbox" name="can_reserve" value="1" <?= checked($can_reserve, '1', false) ?> />
 
 
     <?php
@@ -107,58 +116,6 @@ function wpbooking_event_text_color_metabox_callback($post) {
     <?php
 }
 
-function wpbooking_event_exceptions_metabox_callback($post) {
-    $exceptions = get_post_meta($post->ID, '_exceptions', true);
-    $exceptions = is_array($exceptions) ? $exceptions : [];
-
-    ?>
-    <div id="wpbooking-exceptions-wrap">
-        <input type="date" id="wpbooking-exception-date">
-        <button type="button" class="button" id="wpbooking-add-exception"><?php _e('Añadir fecha'); ?></button>
-        <ul id="wpbooking-exceptions-list">
-            <?php foreach ($exceptions as $date): ?>
-                <li data-date="<?= esc_attr($date) ?>">
-                    <?= esc_html($date) ?>
-                    <span class="remove-exception" style="cursor:pointer; color:red; margin-left:10px;">&times;</span>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-        <input type="hidden" name="_exceptions" id="wpbooking-exceptions-field" value="<?= esc_attr(json_encode($exceptions)) ?>">
-    </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const input = document.getElementById('wpbooking-exception-date');
-            const addBtn = document.getElementById('wpbooking-add-exception');
-            const list = document.getElementById('wpbooking-exceptions-list');
-            const field = document.getElementById('wpbooking-exceptions-field');
-
-            const updateField = () => {
-                const dates = Array.from(list.querySelectorAll('li')).map(li => li.dataset.date);
-                field.value = JSON.stringify(dates);
-            };
-
-            addBtn.addEventListener('click', () => {
-                const date = input.value;
-                if (!date || list.querySelector(`li[data-date="${date}"]`)) return;
-
-                const li = document.createElement('li');
-                li.dataset.date = date;
-                li.innerHTML = `${date} <span class="remove-exception" style="cursor:pointer; color:red; margin-left:10px;">&times;</span>`;
-                list.appendChild(li);
-                updateField();
-            });
-
-            list.addEventListener('click', (e) => {
-                if (e.target.classList.contains('remove-exception')) {
-                    e.target.closest('li').remove();
-                    updateField();
-                }
-            });
-        });
-    </script>
-    <?php
-}
-
 // Guardar datos del evento
 add_action('save_post_wpbooking_event', function ($post_id) {
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
@@ -166,14 +123,11 @@ add_action('save_post_wpbooking_event', function ($post_id) {
     update_post_meta($post_id, '_calendar_title', sanitize_text_field($_POST['calendar_title'] ?? ''));
     update_post_meta($post_id, '_color', sanitize_hex_color($_POST['color'] ?? ''));
     update_post_meta($post_id, '_text_color', sanitize_hex_color($_POST['text_color'] ?? ''));
-    update_post_meta($post_id, '_start_date', sanitize_text_field($_POST['start_date'] ?? ''));
-    update_post_meta($post_id, '_end_date', sanitize_text_field($_POST['end_date'] ?? ''));
+    update_post_meta($post_id, '_price', sanitize_text_field($_POST['price'] ?? ''));
+    update_post_meta($post_id, '_hour_start', sanitize_text_field($_POST['hour_start'] ?? ''));
+    update_post_meta($post_id, '_hour_end', sanitize_text_field($_POST['hour_end'] ?? ''));
     update_post_meta($post_id, '_enabled', isset($_POST['enabled']) ? '1' : '0');
-
-    if (isset($_POST['_exceptions'])) {
-        $data = json_decode(stripslashes($_POST['_exceptions']), true);
-        update_post_meta($post_id, '_exceptions', array_filter($data));
-    }
+    update_post_meta($post_id, '_can_reserve', isset($_POST['can_reserve']) ? '1' : '0');
 });
 
 // Añadir columnas personalizadas
@@ -200,3 +154,15 @@ add_action('manage_wpbooking_event_posts_custom_column', function($column, $post
         echo $enabled ? __wpb('Yes') : __wpb('No');
     }
 }, 10, 2);
+
+// Pagina individual
+add_filter('single_template', function ($template) {
+    global $post;
+    if ($post->post_type === 'wpbooking_event') {
+        $custom = DIRECTORI_PLUGIN_WPBOOKING . 'templates/views/event/single-wpbooking-event.php';
+        if (file_exists($custom)) {
+            return $custom;
+        }
+    }
+    return $template;
+});

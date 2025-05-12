@@ -111,3 +111,8 @@ include_once( DIRECTORI_PLUGIN_WPBOOKING . 'includes/wpbooking-shortcodes.php' )
  * Registrar API REST
  ************************************************************/
 include_once( DIRECTORI_PLUGIN_WPBOOKING . 'includes/wpbooking-api.php' );
+
+/************************************************************
+ * Registrar CRON
+ ************************************************************/
+include_once( DIRECTORI_PLUGIN_WPBOOKING . 'includes/wpbooking-cron.php' );

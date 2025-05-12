@@ -14,7 +14,7 @@ add_action('rest_api_init', function () {
         }
     ]);
 
-    register_rest_route('wpbooking/v1', '/events', [
+    register_rest_route('wpbooking/v1', '/events/(?P<id>[a-zA-Z0-9_-]+)', [
         'methods'  => 'DELETE',
         'callback' => 'wpbooking_delete_event',
         'permission_callback' => function () {
@@ -25,15 +25,39 @@ add_action('rest_api_init', function () {
 function wpbooking_get_events($request) {
     $start = sanitize_text_field($request->get_param('start'));
     $end   = sanitize_text_field($request->get_param('end'));
+    $is_admin = $request->get_param('is_admin') === '1';
 
-    $events = get_option('wpbooking_events', []); // sin json_decode
+    $events = get_option('wpbooking_events', []);
+    $options = get_option('wpbooking_options', []);
+    $split_events = !$is_admin && !empty($options['individual_days']);
+
     $filtered = [];
 
     foreach ($events as $event) {
         $event_start = $event['start'] ?? '';
-        $event_end = $event['end'] ?? $event_start;
+        $event_end = $event['end'] ?: $event_start;
 
-        if ($event_start <= $end && $event_end >= $start) {
+        // Ignorar eventos ya pasados
+        if ($event_end < date('Y-m-d')) continue;
+
+        // Ignorar si no está en el rango
+        if ($event_start > $end || $event_end < $start) continue;
+
+        if ($split_events && $event_start !== $event_end) {
+            // Evento individual por día
+            $start_date = new DateTime($event_start);
+            $end_date = new DateTime($event_end);
+
+            while ($start_date < $end_date) {
+                $e = $event;
+                $e['start'] = $start_date->format('Y-m-d');
+                $e['end'] = $start_date->format('Y-m-d');
+                $e['id'] = $event['id'] . '_' . $start_date->format('Ymd');
+                $filtered[] = $e;
+                $start_date->modify('+1 day');
+            }
+        } else {
+            // Evento normal
             $filtered[] = $event;
         }
     }
@@ -46,6 +70,16 @@ function wpbooking_save_event($request) {
     try {
         $params = $request->get_json_params();
         $events = get_option('wpbooking_events', []);
+
+        // Validar que la fecha de inicio no sea anterior al día de hoy
+        $start_date = $params['start'] ?? ''; // Suponemos que 'start' es en formato 'Y-m-d'
+
+        if ($start_date && strtotime($start_date) < strtotime('today')) {
+            return rest_ensure_response([
+                'success' => false,
+                'message' => __wpb('Start date cannot be in the past'),
+            ]);
+        }
 
         $id = $params['id'] ?? uniqid('ev_');
         $events[$id] = array_merge([

@@ -43,3 +43,8 @@
     font-size: 0.9rem;
     color: #555;
 }
+
+/*PAGINA EVENTO RESERVA*/
+.single-wpbooking_event #content {
+    flex-direction: column;
+}

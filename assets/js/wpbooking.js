@@ -37,7 +37,17 @@ document.addEventListener('DOMContentLoaded', function() {
         businessHours: true, // Hacer que el fin de semana salga en gris
         expandRows: true,
         dayMaxEvents: true, // allow "more" link when too many events
-        events: '/wp-json/wpbooking/v1/events', // cambia esta ruta
+        events: function(fetchInfo, successCallback, failureCallback) {
+            const url = new URL('/wp-json/wpbooking/v1/events', window.location.origin);
+            url.searchParams.append('start', fetchInfo.startStr);
+            url.searchParams.append('end', fetchInfo.endStr);
+            url.searchParams.append('is_admin', WPBookingData.is_admin ? '1' : '0');
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => successCallback(data))
+                .catch(error => failureCallback(error));
+        },
         drop: function (info) {
             let data = {};
             if (info.draggedEl.dataset.event) {
@@ -57,12 +67,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify(data)
             })
             .then(showResponseAlert)
-            .then(() => calendar.refetchEvents())
-            .catch(() => {});
+            .catch((error) => {
+                console.error(error); // Para logear cualquier error
+            });
         },
-
         eventDrop: function (info) {
-            alertify.success("Canvis guardats correctament!");
             const data = {
                 id: info.event.id,
                 type: info.event.extendedProps.type || '',
@@ -84,7 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(showResponseAlert)
             .catch(() => {});
         },
-
         eventResize: function (info) {
             const data = {
                 id: info.event.id,
@@ -108,6 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(() => {});
         },
         eventClick: function(info) {
+            if(!WPBookingData.is_admin) return;
             if (confirm("¿Quieres eliminar este evento?")) {
                 fetch('/wp-json/wpbooking/v1/events/' + info.event.id, {
                     method: 'DELETE',
@@ -136,10 +145,16 @@ document.addEventListener('DOMContentLoaded', function() {
 function showResponseAlert(response) {
     if (!response.ok) {
         alertify.error("Error al guardar los datos.");
-        return Promise.reject();
+        return Promise.reject(); // Detener el flujo aquí si hay un error de red
     }
     return response.json().then(data => {
-        if (data?.message) alertify.success(data.message);
+        // Si el evento no fue guardado correctamente (ejemplo: fecha en pasado)
+        if (data.success === false) {
+            alertify.error(data.message || "Ocurrió un error inesperado.");
+            return Promise.reject(data.message); // Detener el flujo aquí
+        } else {
+            alertify.success(data.message || "Evento guardado con éxito.");
+        }
         return data;
     });
 }
