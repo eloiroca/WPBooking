@@ -17,4 +17,8 @@ return [
     'Event text color' => 'Color del text de l\'esdeveniment',
     'Start date' => 'Data d\'inici',
     'End date' => 'Data de finalització',
+    'Event saved successfully' => 'Esdeveniment desat correctament',
+    'Event deleted successfully' => 'Esdeveniment eliminat correctament',
+    'Event not found' => 'Esdeveniment no trobat',
+    'Error deleting event' => 'Error en eliminar l\'esdeveniment',
 ];

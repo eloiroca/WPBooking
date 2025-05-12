@@ -17,4 +17,7 @@ return [
     'Event text color' => 'Color del texto del evento',
     'Start date' => 'Fecha de inicio',
     'End date' => 'Fecha de finalización',
+    'Event saved successfully' => 'Evento guardado correctamente',
+    'Event deleted successfully' => 'Evento eliminado correctamente',
+    'Error deleting event' => 'Error al eliminar el evento',
 ];
