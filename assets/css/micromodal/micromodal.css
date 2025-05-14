@@ -93,7 +93,7 @@
 }
 
 .modal__footer button {
-	background-color: red;
+	background-color: red !important;
     color: white;
 }
 

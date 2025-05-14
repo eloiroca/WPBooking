@@ -11,6 +11,25 @@ $options = get_option('wpbooking_options', []);
         ?>
         <table class="form-table">
             <tr valign="top">
+                <th scope="row"><?php echo __wpb('Base language for events') ?></th>
+                <td>
+                    <select name="wpbooking_options[slave_language]">
+                        <?php
+                        if (function_exists('icl_get_languages')) {
+                            $langs = icl_get_languages();
+                            foreach ($langs as $lang) {
+                                $selected = selected($options['slave_language'] ?? '', $lang['language_code'], false);
+                                echo "<option value='{$lang['language_code']}' {$selected}>{$lang['translated_name']}</option>";
+                            }
+                        }
+                        ?>
+                    </select>
+                    <p class="description">
+                        <?php echo __wpb('Only events created in this language will be used. Content will be shown translated.'); ?>
+                    </p>
+                </td>
+            </tr>
+            <tr valign="top">
                 <th scope="row"><?php echo __wpb('Events on individual dates') ?></th>
                 <td>
                     <input type="checkbox" name="wpbooking_options[individual_days]" value="1"

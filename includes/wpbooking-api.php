@@ -32,10 +32,24 @@ function wpbooking_get_events($request) {
     $split_events = !$is_admin && !empty($options['individual_days']);
     $block_current_day = !empty($options['block_current_day']);
 
+    $slave_lang = $options['slave_language'] ?? null;
+    $current_lang = defined('LANG_WPBOOKING') ? LANG_WPBOOKING : null;
+
     $today = date('Y-m-d');
     $filtered = [];
 
     foreach ($events as $event) {
+        $postId = $event['eventPostId'] ?? false;
+        if (!$postId) continue;
+
+        // Filtrar por idioma esclavo
+        $lang = apply_filters('wpml_post_language_details', null, $postId);
+        if (!$lang || $lang['language_code'] !== $slave_lang) continue;
+
+        // Ignorar si no está habilitado
+        $enabled = get_post_meta($postId, '_enabled', true);
+        if ($enabled !== '1') continue;
+
         $event_start = $event['start'] ?? '';
         $event_end = $event['end'] ?: $event_start;
 
@@ -51,6 +65,19 @@ function wpbooking_get_events($request) {
             $enabled = get_post_meta($postId, '_enabled', true);
             if ($enabled !== '1') continue;
         }
+
+        // Obtener título traducido
+        $translated_id = apply_filters('wpml_object_id', $postId, 'wpbooking_event', true, $current_lang);
+        $translated_post = get_post($translated_id);
+        if ($translated_post && isset($event['title'])) {
+            $event['title'] = $translated_post->post_title;
+        }
+
+        // Obtenemos los colores del postId para asignar el color al evento
+        $color = get_post_meta($postId, '_color', true) ?: '#ff0000';
+        $textColor = get_post_meta($postId, '_text_color', true) ?: '#000000';
+        $event['color'] = $color;
+        $event['textColor'] = $textColor;
 
         if ($split_events && $event_start !== $event_end) {
             // Evento individual por día

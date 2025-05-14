@@ -18,7 +18,7 @@
 			</div>
         </main>
         <footer class="modal__footer">
-          <button class="modal__btn" data-micromodal-close aria-label="Close this dialog window">Tancar</button>
+          <button class="modal__btn" data-micromodal-close aria-label="Close this dialog window"><?php echo __wpb("Close"); ?></button>
         </footer>
       </div>
     </div>

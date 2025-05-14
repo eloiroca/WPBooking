@@ -51,7 +51,13 @@
 .single-wpbooking_event .price {
     color: #77a464;
     font-size: 1.25em;
+    margin: 0;
+}
+.single-wpbooking_event .price .lower {
     text-transform: lowercase;
+}
+.single-wpbooking_event .date {
+    font-size: 1.25em;
     margin: 0;
 }
 .single-wpbooking_event .hours {

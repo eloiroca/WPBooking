@@ -37,4 +37,8 @@ return [
     'Tickets cannot be purchased online for the same day, but you can find them, if they are not sold out, at the Park box office.' => 'No es poden comprar entrades en línia per al mateix dia, però pots trobar-les, si no estan esgotades, a la taquilla del parc.',
     'Thank\'s' => 'Gràcies',
     'Block reservation on current day' => 'Bloquejar reserva per al dia actual',
+    'Close' => 'Tancar',
+    'Date' => 'Data',
+    'Base language for events' => 'Idioma base per a esdeveniments',
+    'Only events created in this language will be used. Content will be shown translated.' => 'Només s\'utilitzaran els esdeveniments creats en aquest idioma. El contingut es mostrarà traduït.',
 ];

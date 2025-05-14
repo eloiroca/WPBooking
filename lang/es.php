@@ -37,4 +37,8 @@ return [
     'Tickets cannot be purchased online for the same day, but you can find them, if they are not sold out, at the Park box office.' => 'No se pueden comprar entradas en línea para el mismo día, pero puedes encontrarlas, si no están agotadas, en la taquilla del parque.',
     'Thank\'s' => 'Gracias',
     'Block reservation on current day' => 'Bloquear reserva para el día actual',
+    'Close' => 'Cerrar',
+    'Date' => 'Fecha',
+    'Base language for events' => 'Idioma base para eventos',
+    'Only events created in this language will be used. Content will be shown translated.' => 'Solo se utilizarán los eventos creados en este idioma. El contenido se mostrará traducido.',
 ];
