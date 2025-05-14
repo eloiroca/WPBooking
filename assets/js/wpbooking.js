@@ -48,15 +48,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(data => successCallback(data))
                 .catch(error => failureCallback(error));
         },
-        drop: function (info) {
+        eventReceive: function(info) {
             let data = {};
             if (info.draggedEl.dataset.event) {
                 data = JSON.parse(info.draggedEl.dataset.event);
             }
 
-            // Generar un ID único si no existe
-            data.id = data.id || 'ev_' + Math.random().toString(36).substr(2, 9);
-            data.start = info.dateStr;
+            data.id = 'ev_' + Math.random().toString(36).substr(2, 9);
+            data.start = info.event.startStr;
 
             fetch('/wp-json/wpbooking/v1/events', {
                 method: 'POST',
@@ -67,19 +66,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify(data)
             })
             .then(showResponseAlert)
-            .catch((error) => {
-                console.error(error); // Para logear cualquier error
-            });
+            .then(response => {
+                if (response.success) {
+                    info.event.remove(); // elimina el temporal
+                    info.view.calendar.refetchEvents(); // recarga desde el backend
+                }
+            })
+            .catch(console.error);
         },
         eventDrop: function (info) {
             const data = {
                 id: info.event.id,
-                type: info.event.extendedProps.type || '',
+                type: info.event.extendedProps.type,
                 title: info.event.title,
                 color: info.event.backgroundColor,
                 textColor: info.event.textColor,
                 start: info.event.startStr,
-                end: info.event.endStr
+                end: info.event.endStr,
+                eventPostId: info.event.extendedProps.eventPostId
             };
 
             fetch('/wp-json/wpbooking/v1/events', {
@@ -96,12 +100,13 @@ document.addEventListener('DOMContentLoaded', function() {
         eventResize: function (info) {
             const data = {
                 id: info.event.id,
-                type: info.event.extendedProps.type || '',
+                type: info.event.extendedProps.type,
                 title: info.event.title,
                 color: info.event.backgroundColor,
                 textColor: info.event.textColor,
                 start: info.event.startStr,
-                end: info.event.endStr
+                end: info.event.endStr,
+                eventPostId: info.event.extendedProps.eventPostId
             };
 
             fetch('/wp-json/wpbooking/v1/events', {
@@ -116,7 +121,19 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(() => {});
         },
         eventClick: function(info) {
-            if(!WPBookingData.is_admin) return;
+            if (!WPBookingData.is_admin) {
+                const today = new Date();
+                const eventDate = new Date(info.event.start);
+                const isToday = eventDate.toDateString() === today.toDateString();
+
+                if (isToday) {
+                    info.jsEvent.preventDefault(); // Evita que siga el enlace
+                    MicroModal.show('modal-wpbooking-exhausted');
+                    return;
+                }
+                return; // Permitir que el enlace se abra si no es hoy
+            }
+
             if (confirm("¿Quieres eliminar este evento?")) {
                 fetch('/wp-json/wpbooking/v1/events/' + info.event.id, {
                     method: 'DELETE',
@@ -143,18 +160,21 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function showResponseAlert(response) {
-    if (!response.ok) {
-        alertify.error("Error al guardar los datos.");
-        return Promise.reject(); // Detener el flujo aquí si hay un error de red
-    }
     return response.json().then(data => {
-        // Si el evento no fue guardado correctamente (ejemplo: fecha en pasado)
-        if (data.success === false) {
-            alertify.error(data.message || "Ocurrió un error inesperado.");
-            return Promise.reject(data.message); // Detener el flujo aquí
+        if (response.ok) {
+            if (data.success === false) {
+                alertify.error(data.message || WPBookingData.error_message);
+                return Promise.reject(data.message);
+            } else {
+                alertify.success(data.message || 'Success');
+                return data;
+            }
         } else {
-            alertify.success(data.message || "Evento guardado con éxito.");
+            alertify.error(data.message || WPBookingData.error_message);
+            return Promise.reject(data.message);
         }
-        return data;
+    }).catch(err => {
+        alertify.error(WPBookingData.error_message);
+        return Promise.reject(err);
     });
 }

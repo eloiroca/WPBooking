@@ -48,3 +48,22 @@
 .single-wpbooking_event #content {
     flex-direction: column;
 }
+.single-wpbooking_event .price {
+    color: #77a464;
+    font-size: 1.25em;
+    text-transform: lowercase;
+    margin: 0;
+}
+.single-wpbooking_event .hours {
+    display: flex;
+    justify-content: space-around;
+    margin: 0.5em 0;
+    padding: 0.5em;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+
+}
+.single-wpbooking_event .hour-title {
+    font-weight: bold;
+}

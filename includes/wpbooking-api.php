@@ -30,7 +30,9 @@ function wpbooking_get_events($request) {
     $events = get_option('wpbooking_events', []);
     $options = get_option('wpbooking_options', []);
     $split_events = !$is_admin && !empty($options['individual_days']);
+    $block_current_day = !empty($options['block_current_day']);
 
+    $today = date('Y-m-d');
     $filtered = [];
 
     foreach ($events as $event) {
@@ -43,6 +45,13 @@ function wpbooking_get_events($request) {
         // Ignorar si no está en el rango
         if ($event_start > $end || $event_end < $start) continue;
 
+        // Ignorar si no está habilitado
+        $postId = $event['eventPostId'] ?? false;
+        if ($postId) {
+            $enabled = get_post_meta($postId, '_enabled', true);
+            if ($enabled !== '1') continue;
+        }
+
         if ($split_events && $event_start !== $event_end) {
             // Evento individual por día
             $start_date = new DateTime($event_start);
@@ -53,10 +62,24 @@ function wpbooking_get_events($request) {
                 $e['start'] = $start_date->format('Y-m-d');
                 $e['end'] = $start_date->format('Y-m-d');
                 $e['id'] = $event['id'] . '_' . $start_date->format('Ymd');
+
+                if (!$is_admin && $postId) {
+                    $can_reserve = get_post_meta($postId, '_can_reserve', true);
+                    if ($can_reserve == '1' && !($block_current_day && $e['start'] === $today)) {
+                        $e['url'] = get_permalink($postId) . '?d=' . wpbooking_encrypt_date($e['start']);
+                    }
+                }
+
                 $filtered[] = $e;
                 $start_date->modify('+1 day');
             }
         } else {
+            if (!$is_admin && $postId) {
+                $can_reserve = get_post_meta($postId, '_can_reserve', true);
+                if ($can_reserve == '1' && !($block_current_day && $event_start === $today)) {
+                    $event['url'] = get_permalink($postId) . '?d=' . wpbooking_encrypt_date($event_start);
+                }
+            }
             // Evento normal
             $filtered[] = $event;
         }
@@ -71,9 +94,15 @@ function wpbooking_save_event($request) {
         $params = $request->get_json_params();
         $events = get_option('wpbooking_events', []);
 
-        // Validar que la fecha de inicio no sea anterior al día de hoy
-        $start_date = $params['start'] ?? ''; // Suponemos que 'start' es en formato 'Y-m-d'
+        // Asegurar que sea un array
+        if (!is_array($events)) {
+            $events = [];
+        }
 
+        $start_date = $params['start'] ?? '';
+        $post_id = $params['eventPostId'] ?? '';
+
+        // Validar fecha en pasado
         if ($start_date && strtotime($start_date) < strtotime('today')) {
             return rest_ensure_response([
                 'success' => false,
@@ -81,7 +110,22 @@ function wpbooking_save_event($request) {
             ]);
         }
 
+        // Validar que tenga eventPostId
+        if (empty($post_id)) {
+            return rest_ensure_response([
+                'success' => false,
+                'message' => __wpb('The event must be linked to a valid post ID'),
+            ]);
+        }
+
         $id = $params['id'] ?? uniqid('ev_');
+        // Validar que el $id esta vacío
+        if (empty($id)) {
+            return rest_ensure_response([
+                'success' => false,
+                'message' => __wpb('Event ID cannot be empty'),
+            ]);
+        }
         $events[$id] = array_merge([
             'id' => $id,
             'title' => '',
@@ -90,16 +134,18 @@ function wpbooking_save_event($request) {
             'color' => '',
             'textColor' => '',
             'type' => 'wpbooking_event',
+            'eventPostId' => '',
         ], $params);
 
         update_option('wpbooking_events', $events);
+
         return rest_ensure_response([
             'success' => true,
             'message' => __wpb('Event saved successfully'),
             'event' => $events[$id]
         ]);
     } catch (Throwable $e) {
-        return new WP_Error('error_guardar', 'Error al guardar el evento', ['status' => 500]);
+        return new WP_Error('error_guardar', __wpb('Error saving event') . ' ' . $e->getMessage(), ['status' => 500]);
     }
 }
 
@@ -121,4 +167,8 @@ function wpbooking_delete_event($request) {
     } catch (Throwable $e) {
         return new WP_Error('error_borrar', __wpb('Error deleting event'), ['status' => 500]);
     }
+}
+
+function wpbooking_encrypt_date($date) {
+    return rtrim(strtr(base64_encode($date), '+/', '-_'), '=');
 }

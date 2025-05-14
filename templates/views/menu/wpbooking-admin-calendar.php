@@ -24,7 +24,8 @@ $eventos = get_posts([
                          'type' => 'wpbooking_event',
                          'title' => $title,
                          'color' => $color,
-                         'textColor' => $textColor
+                         'textColor' => $textColor,
+                         'eventPostId' => $evento->ID,
                      ]) ?>'
                      style="background-color: <?= esc_attr($color) ?>; color: <?= esc_attr($textColor) ?>;">
                     <?= esc_html($title) ?>

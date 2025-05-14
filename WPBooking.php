@@ -85,7 +85,8 @@ function registrar_estilos_scripts($hook = '') {
         'end_calendar' => END_CALENDAR_WPBOOKING,
         'is_admin' => is_admin(),
         'lang' => LANG_WPBOOKING,
-        'nonce' => wp_create_nonce('wp_rest')
+        'nonce' => wp_create_nonce('wp_rest'),
+        'error_message' => __wpb('An error occurred while saving the event'),
     ));
 
 }

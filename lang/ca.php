@@ -29,4 +29,12 @@ return [
     'Start date cannot be in the past' => 'La data d\'inici no pot ser en el passat',
     'Event settings' => 'Configuració de l\'esdeveniment',
     'Can reserve' => 'Pot reservar',
+    'Day' => 'Día',
+    'An error occurred while saving the event' => 'S\'ha produït un error en desar l\'esdeveniment',
+    'The event must be linked to a valid post ID' => 'L\'esdeveniment ha d\'estar vinculat a un ID de publicació vàlid',
+    'Event ID cannot be empty' => 'L\'ID de l\'esdeveniment no pot estar buit',
+    'There is no availability for today' => 'No hi ha disponibilitat per avui',
+    'Tickets cannot be purchased online for the same day, but you can find them, if they are not sold out, at the Park box office.' => 'No es poden comprar entrades en línia per al mateix dia, però pots trobar-les, si no estan esgotades, a la taquilla del parc.',
+    'Thank\'s' => 'Gràcies',
+    'Block reservation on current day' => 'Bloquejar reserva per al dia actual',
 ];

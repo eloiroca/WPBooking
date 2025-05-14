@@ -20,6 +20,13 @@ $options = get_option('wpbooking_options', []);
                     </label>
                 </td>
             </tr>
+            <tr valign="top">
+                <th scope="row"><?php echo __wpb('Block reservation on current day') ?></th>
+                <td>
+                    <input type="checkbox" name="wpbooking_options[block_current_day]" value="1"
+                        <?php checked(1, $options['block_current_day'] ?? 0); ?> />
+                </td>
+            </tr>
         </table>
         <?php submit_button(); ?>
     </form>

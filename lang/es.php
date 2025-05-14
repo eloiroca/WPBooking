@@ -29,4 +29,12 @@ return [
     'Start date cannot be in the past' => 'La fecha de inicio no puede ser en el pasado',
     'Event settings' => 'Configuración del evento',
     'Can reserve' => 'Puede reservar',
+    'Day' => 'Día',
+    'An error occurred while saving the event' => 'Ocurrió un error al guardar el evento',
+    'The event must be linked to a valid post ID' => 'El evento debe estar vinculado a un ID de publicación válido',
+    'Event ID cannot be empty' => 'El ID del evento no puede estar vacío',
+    'There is no availability for today' => 'No hay disponibilidad para hoy',
+    'Tickets cannot be purchased online for the same day, but you can find them, if they are not sold out, at the Park box office.' => 'No se pueden comprar entradas en línea para el mismo día, pero puedes encontrarlas, si no están agotadas, en la taquilla del parque.',
+    'Thank\'s' => 'Gracias',
+    'Block reservation on current day' => 'Bloquear reserva para el día actual',
 ];
