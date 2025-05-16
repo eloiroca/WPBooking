@@ -33,7 +33,7 @@ function wpbooking_get_events($request) {
     $block_current_day = !empty($options['block_current_day']);
 
     $slave_lang = $options['slave_language'] ?? null;
-    $current_lang = defined('LANG_WPBOOKING') ? LANG_WPBOOKING : null;
+    $current_lang = sanitize_text_field($request->get_param('lang')) ?: null;
 
     $today = date('Y-m-d');
     $filtered = [];

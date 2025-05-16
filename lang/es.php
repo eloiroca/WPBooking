@@ -41,4 +41,5 @@ return [
     'Date' => 'Fecha',
     'Base language for events' => 'Idioma base para eventos',
     'Only events created in this language will be used. Content will be shown translated.' => 'Solo se utilizarán los eventos creados en este idioma. El contenido se mostrará traducido.',
+    'Editing translation. These fields are managed from the primary language.' => 'Editando traducción. Estos campos se gestionan desde el idioma principal.',
 ];

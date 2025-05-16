@@ -60,6 +60,12 @@ add_action('add_meta_boxes', function () {
 });
 
 function wpbooking_event_meta_callback($post) {
+    if (wpbooking_is_translating_wpml($post->ID, 'wpbooking_event')) {
+        echo '<p style="color: #d63638; font-weight: bold;">' . esc_html(__('Editando traducción. Estos campos se gestionan desde el idioma principal.', 'wpbooking')) . '</p>';
+        return;
+    }
+
+
     $price = get_post_meta($post->ID, '_price', true);
     $hour_start = get_post_meta($post->ID, '_hour_start', true);
     $hour_end = get_post_meta($post->ID, '_hour_end', true);
@@ -93,6 +99,10 @@ function wpbooking_event_title_metabox_callback($post) {
 }
 
 function wpbooking_event_color_metabox_callback($post) {
+    if (wpbooking_is_translating_wpml($post->ID, 'wpbooking_event')) {
+        echo '<p style="color: #d63638; font-weight: bold;">' . esc_html(__('Editando traducción. Estos campos se gestionan desde el idioma principal.', 'wpbooking')) . '</p>';
+        return;
+    }
     $color = get_post_meta($post->ID, '_color', true) ?: '#ff0000';
     ?>
     <input type="text" name="color" id="_color" value="<?php echo esc_attr($color); ?>" class="wp-color-picker-field" data-default-color="#ff0000">
@@ -105,6 +115,10 @@ function wpbooking_event_color_metabox_callback($post) {
 }
 
 function wpbooking_event_text_color_metabox_callback($post) {
+    if (wpbooking_is_translating_wpml($post->ID, 'wpbooking_event')) {
+        echo '<p style="color: #d63638; font-weight: bold;">' . esc_html(__('Editando traducción. Estos campos se gestionan desde el idioma principal.', 'wpbooking')) . '</p>';
+        return;
+    }
     $text_color = get_post_meta($post->ID, '_text_color', true) ?: '#000000';
     ?>
     <input type="text" name="text_color" id="_text_color" value="<?php echo esc_attr($text_color); ?>" class="wp-color-picker-field" data-default-color="#000000">
@@ -114,6 +128,12 @@ function wpbooking_event_text_color_metabox_callback($post) {
         });
     </script>
     <?php
+}
+
+function wpbooking_is_translating_wpml($post_id, $post_type) {
+    $default_lang = apply_filters('wpml_default_language', null);
+    $original_id = apply_filters('wpml_object_id', $post_id, $post_type, false, $default_lang);
+    return $original_id != $post_id;
 }
 
 // Guardar datos del evento
@@ -132,11 +152,20 @@ add_action('save_post_wpbooking_event', function ($post_id) {
 
 // Añadir columnas personalizadas
 add_filter('manage_wpbooking_event_posts_columns', function($columns) {
+    $options = get_option('wpbooking_options', []);
+    $slave_lang = $options['slave_language'] ?? null;
+    $current_lang = defined('LANG_WPBOOKING') ? LANG_WPBOOKING : null;
+
+    if ($current_lang === $slave_lang) {
+        $columns['event_color'] = __wpb('Event color');
+        $columns['event_text_color'] = __wpb('Event text color');
+    }
+
     $columns['calendar_title'] = __wpb('Calendar title');
-    $columns['event_color'] = __wpb('Event color');
     $columns['enabled'] = __wpb('Enabled');
     return $columns;
 });
+
 
 // Mostrar los valores de las columnas personalizadas
 add_action('manage_wpbooking_event_posts_custom_column', function($column, $post_id) {

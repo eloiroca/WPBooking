@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
             url.searchParams.append('start', fetchInfo.startStr);
             url.searchParams.append('end', fetchInfo.endStr);
             url.searchParams.append('is_admin', WPBookingData.is_admin ? '1' : '0');
+            url.searchParams.append('lang', WPBookingData.lang);
 
             fetch(url)
                 .then(response => response.json())
