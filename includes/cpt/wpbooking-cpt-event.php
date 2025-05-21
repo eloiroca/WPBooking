@@ -100,7 +100,7 @@ function wpbooking_event_title_metabox_callback($post) {
 
 function wpbooking_event_color_metabox_callback($post) {
     if (wpbooking_is_translating_wpml($post->ID, 'wpbooking_event')) {
-        echo '<p style="color: #d63638; font-weight: bold;">' . esc_html(__('Editando traducción. Estos campos se gestionan desde el idioma principal.', 'wpbooking')) . '</p>';
+        echo '<p style="color: #d63638; font-weight: bold;">' . esc_html(__wpb('Editing translation. These fields are managed from the primary language.')) . '</p>';
         return;
     }
     $color = get_post_meta($post->ID, '_color', true) ?: '#ff0000';
@@ -116,7 +116,7 @@ function wpbooking_event_color_metabox_callback($post) {
 
 function wpbooking_event_text_color_metabox_callback($post) {
     if (wpbooking_is_translating_wpml($post->ID, 'wpbooking_event')) {
-        echo '<p style="color: #d63638; font-weight: bold;">' . esc_html(__('Editando traducción. Estos campos se gestionan desde el idioma principal.', 'wpbooking')) . '</p>';
+        echo '<p style="color: #d63638; font-weight: bold;">' . esc_html(__wpb('Editing translation. These fields are managed from the primary language.')) . '</p>';
         return;
     }
     $text_color = get_post_meta($post->ID, '_text_color', true) ?: '#000000';
@@ -176,6 +176,11 @@ add_action('manage_wpbooking_event_posts_custom_column', function($column, $post
     if ($column === 'event_color') {
         $color = get_post_meta($post_id, '_color', true);
         echo '<span style="display:inline-block;width:20px;height:20px;background:' . esc_attr($color) . ';border:1px solid #ccc;"></span>';
+    }
+
+    if ($column === 'event_text_color') {
+        $text_color = get_post_meta($post_id, '_text_color', true);
+        echo '<span style="display:inline-block;width:20px;height:20px;background:' . esc_attr($text_color) . ';border:1px solid #ccc;"></span>';
     }
 
     if ($column === 'enabled') {
