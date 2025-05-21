@@ -103,6 +103,7 @@ include_once( DIRECTORI_PLUGIN_WPBOOKING . 'includes/wpbooking-menu.php' );
  ************************************************************/
 include_once( DIRECTORI_PLUGIN_WPBOOKING . 'includes/cpt/wpbooking-cpt-event.php' );
 include_once( DIRECTORI_PLUGIN_WPBOOKING . 'includes/cpt/wpbooking-cpt-person.php' );
+include_once( DIRECTORI_PLUGIN_WPBOOKING . 'includes/cpt/wpbooking-cpt-service.php' );
 
 /************************************************************
  * Registrar Shortcodes

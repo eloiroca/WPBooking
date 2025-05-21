@@ -1,17 +1,17 @@
 <?php
-// Registrar CPT Person
+// Registrar CPT Service
 add_action('init', function () {
-    register_post_type('wpbooking_person', array(
+    register_post_type('wpbooking_service', array(
         'labels' => array(
-            'name' => __wpb('Persons'),
-            'singular_name' => __wpb('Person'),
+            'name' => __wpb('Services'),
+            'singular_name' => __wpb('Service'),
             'add_new' => __wpb('Add new'),
-            'add_new_item' => __wpb('Add new person'),
-            'edit_item' => __wpb('Edit person'),
-            'new_item' => __wpb('New person'),
-            'view_item' => __wpb('View person'),
-            'search_items' => __wpb('Search persons'),
-            'not_found' => __wpb('No persons found'),
+            'add_new_item' => __wpb('Add new service'),
+            'edit_item' => __wpb('Edit service'),
+            'new_item' => __wpb('New service'),
+            'view_item' => __wpb('View service'),
+            'search_items' => __wpb('Search services'),
+            'not_found' => __wpb('No services found'),
         ),
         'public' => true,
         //'show_ui' => true,
@@ -24,36 +24,36 @@ add_action('init', function () {
     ));
 });
 
-// Metaboxes para Person
+// Metaboxes para Service
 add_action('add_meta_boxes', function () {
     add_meta_box(
-        'wpbooking_person_events_metabox',
+        'wpbooking_service_events_metabox',
         __wpb('Assign to events'),
-        'wpbooking_person_events_metabox_callback',
-        'wpbooking_person',
+        'wpbooking_service_events_metabox_callback',
+        'wpbooking_service',
         'side'
     );
-    // Precio de la persona
+    // Precio del servicio
     add_meta_box(
-        'wpbooking_person_price_metabox',
+        'wpbooking_service_price_metabox',
         __wpb('Price'),
-        'wpbooking_person_price_metabox_callback',
-        'wpbooking_person',
+        'wpbooking_service_price_metabox_callback',
+        'wpbooking_service',
         'side'
     );
     // Cantidades
     add_meta_box(
-        'wpbooking_person_qty_metabox',
+        'wpbooking_service_qty_metabox',
         __wpb('Quantities'),
-        'wpbooking_person_qty_metabox_callback',
-        'wpbooking_person',
+        'wpbooking_service_qty_metabox_callback',
+        'wpbooking_service',
         'side'
     );
 });
 
 // Metabox eventos asignados
-function wpbooking_person_events_metabox_callback($post) {
-    if (wpbooking_is_translating_wpml($post->ID, 'wpbooking_person')) {
+function wpbooking_service_events_metabox_callback($post) {
+    if (wpbooking_is_translating_wpml($post->ID, 'wpbooking_service')) {
         echo '<p style="color: #d63638; font-weight: bold;">' . esc_html(__wpb('Editing translation. These fields are managed from the primary language.')) . '</p>';
         return;
     }
@@ -85,8 +85,8 @@ function wpbooking_person_events_metabox_callback($post) {
 }
 
 // Metabox precio
-function wpbooking_person_price_metabox_callback($post) {
-    if (wpbooking_is_translating_wpml($post->ID, 'wpbooking_person')) {
+function wpbooking_service_price_metabox_callback($post) {
+    if (wpbooking_is_translating_wpml($post->ID, 'wpbooking_service')) {
         echo '<p style="color: #d63638; font-weight: bold;">' . esc_html(__wpb('Editing translation. These fields are managed from the primary language.')) . '</p>';
         return;
     }
@@ -97,8 +97,8 @@ function wpbooking_person_price_metabox_callback($post) {
 }
 
 // Metabox cantidades
-function wpbooking_person_qty_metabox_callback($post) {
-    if (wpbooking_is_translating_wpml($post->ID, 'wpbooking_person')) {
+function wpbooking_service_qty_metabox_callback($post) {
+    if (wpbooking_is_translating_wpml($post->ID, 'wpbooking_service')) {
         echo '<p style="color: #d63638; font-weight: bold;">' . esc_html(__wpb('Editing translation. These fields are managed from the primary language.')) . '</p>';
         return;
     }
@@ -113,7 +113,7 @@ function wpbooking_person_qty_metabox_callback($post) {
 }
 
 // Guardar metadatos
-add_action('save_post_wpbooking_person', function ($post_id) {
+add_action('save_post_wpbooking_service', function ($post_id) {
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
 
     update_post_meta($post_id, '_price', sanitize_text_field($_POST['price'] ?? ''));
@@ -125,13 +125,13 @@ add_action('save_post_wpbooking_person', function ($post_id) {
 });
 
 // Añadir columna personalizada de precio
-add_filter('manage_wpbooking_person_posts_columns', function ($columns) {
+add_filter('manage_wpbooking_service_posts_columns', function ($columns) {
     $columns['price'] = __wpb('Price');
     return $columns;
 });
 
 // Contenido de la columna Price
-add_action('manage_wpbooking_person_posts_custom_column', function ($column, $post_id) {
+add_action('manage_wpbooking_service_posts_custom_column', function ($column, $post_id) {
     if ($column === 'price') {
         echo esc_html(get_post_meta($post_id, '_price', true));
     }

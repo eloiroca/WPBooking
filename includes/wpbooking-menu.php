@@ -25,9 +25,17 @@ add_action('admin_menu', function () {
         'manage_options',
         'edit.php?post_type=wpbooking_person'
     );
+
+    add_submenu_page(
+        'wpbooking',
+        __wpb('Services'),
+        __wpb('Services'),
+        'manage_options',
+        'edit.php?post_type=wpbooking_service'
+    );
     add_filter('parent_file', function ($parent_file) {
         global $typenow;
-        if ($typenow === 'wpbooking_event' || $typenow === 'wpbooking_person') {
+        if ($typenow === 'wpbooking_event' || $typenow === 'wpbooking_person' || $typenow === 'wpbooking_service') {
             return 'wpbooking';
         }
         return $parent_file;
