@@ -70,4 +70,8 @@ return [
     'Total price' => 'Preu total',
     'Total services' => 'Total de serveis',
     'No tickets or services available for this event.' => 'No hi ha entrades ni serveis disponibles per a aquest esdeveniment.',
+    'Reserve' => 'Reservar',
+    'You must select at least one person or service' => 'Heu de seleccionar almenys una persona o servei',
+    'Event added to cart successfully' => 'Esdeveniment afegit al carretó correctament',
+    'Invalid request' => 'Sol·licitud no vàlida',
 ];

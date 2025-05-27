@@ -118,6 +118,9 @@
     flex-wrap: nowrap;
     gap: 20px;
 }
+.single-wpbooking_event .wpbooking-ticket-total {
+    margin: 20px 0 20px 0;
+}
 
 /* RESONSIVE */
 @media (max-width: 900px) {

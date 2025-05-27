@@ -174,6 +174,13 @@ while (have_posts()) : the_post();
         <span id="wpbooking-total-price">0.00 €</span>
     </div>
 
+    <form id="wpbooking-reserve-form" method="post" action="<?php echo admin_url('admin-post.php'); ?>">
+        <input type="hidden" name="action" value="wpbooking_add_to_cart">
+        <input type="hidden" name="event_id" value="<?php echo esc_attr($event_id); ?>">
+        <input type="hidden" name="personas_json" id="wpbooking-personas-json">
+        <input type="hidden" name="services_json" id="wpbooking-services-json">
+        <button type="submit" class="wpbooking-reserve-button"><?php echo __wpb('Reserve') ?></button>
+    </form>
 
     <?php
 // Mostrar el contenido del evento
@@ -242,6 +249,68 @@ echo '<div>' . get_the_content() . '</div>';
             setupControls('.wpbooking-ticket-row');
             setupControls('.wpbooking-service-row');
             updateTotal(); // inicial
+
+            // Enviar el formulario al reservar
+            $('#wpbooking-reserve-form').on('submit', function (e) {
+                e.preventDefault();
+
+                const personas = {};
+                const services = {};
+
+                $('.wpbooking-ticket-row').each(function () {
+                    const id = $(this).data('id');
+                    const qty = parseInt($(this).find('input').val());
+                    if (qty > 0) personas[id] = qty;
+                });
+
+                $('.wpbooking-service-row').each(function () {
+                    const id = $(this).data('id');
+                    const qty = parseInt($(this).find('input').val());
+                    if (qty > 0) services[id] = qty;
+                });
+
+                //Si no hay personas ni servicios, mostramos un mensaje
+                if (Object.keys(personas).length === 0 && Object.keys(services).length === 0) {
+                    Swal.fire({
+                        title: "",
+                        text: WPBookingData.error_select_person_or_service,
+                        icon: "warning",
+                        customClass: {
+                            popup: 'swal-custom'
+                        }
+                    });
+                    return;
+                }
+
+                $.ajax({
+                    url: WPBookingData.ajax_url,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        action: 'wpbooking_add_to_cart',
+                        event_id: $('#wpbooking-reserve-form input[name="event_id"]').val(),
+                        personas_json: JSON.stringify(personas),
+                        services_json: JSON.stringify(services),
+                    },
+                    success: function (res) {
+                        if (res.success) {
+                            window.location.href = '/cart'; // o wc_get_cart_url()
+                        } else {
+                            alert(res.data.message || 'Error al reservar');
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            title: "",
+                            text: "Error en la solicitud.",
+                            icon: "error",
+                            customClass: {
+                                popup: 'swal-custom'
+                            }
+                        });
+                    }
+                });
+            });
         });
     </script>
 

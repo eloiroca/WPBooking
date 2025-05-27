@@ -8,6 +8,9 @@
 
 define("DIRECTORI_PLUGIN_WPBOOKING" , plugin_dir_path( __FILE__ ));
 define("URL_PLUGIN_WPBOOKING" , plugin_dir_url( __FILE__ ));
+
+define("ASSETS_VERSION_WPBOOKING", "1.0.0");
+
 //Language Definition
 add_action('plugins_loaded', function() {
     if (!defined('LANG_WPBOOKING')) {
@@ -56,7 +59,7 @@ if (!function_exists('__wpb')) {
  * Registrar estilos y scripts
  ************************************************************/
 function registrar_estilos_scripts($hook = '') {
-    $versio = "1.0.0";
+    $versio = ASSETS_VERSION_WPBOOKING;
 
     // Solo cargar en admin si es WPBooking
     if (is_admin() && strpos($hook, 'wpbooking') === false) return;
@@ -68,6 +71,10 @@ function registrar_estilos_scripts($hook = '') {
     // Alertify
     wp_enqueue_style( 'style-wpbooking-alertify', URL_PLUGIN_WPBOOKING. 'assets/css/alertify/alertify.css', array(), $versio);
     wp_enqueue_script( 'script-wpbooking-alertify', URL_PLUGIN_WPBOOKING . 'assets/js/alertify/alertify.js', array(), $versio );
+
+    // SweetAlert
+    wp_enqueue_style( 'style-wpbooking-sweetalert', URL_PLUGIN_WPBOOKING . 'assets/css/sweetalert/sweetalert2.min.css', array(), $versio);
+    wp_enqueue_script( 'script-wpbooking-sweetalert', URL_PLUGIN_WPBOOKING . 'assets/js/sweetalert/sweetalert2.min.js', array(), $versio );
 
     // Calendar
     wp_enqueue_script( 'script-wpbooking-calendar', URL_PLUGIN_WPBOOKING . 'assets/js/fullcalendar/index.global.min.js', array(), $versio );
@@ -87,6 +94,7 @@ function registrar_estilos_scripts($hook = '') {
         'lang' => LANG_WPBOOKING,
         'nonce' => wp_create_nonce('wp_rest'),
         'error_message' => __wpb('An error occurred while saving the event'),
+        'error_select_person_or_service' => __wpb('You must select at least one person or service'),
     ));
 
 }
@@ -114,6 +122,11 @@ include_once( DIRECTORI_PLUGIN_WPBOOKING . 'includes/wpbooking-shortcodes.php' )
  * Registrar API REST
  ************************************************************/
 include_once( DIRECTORI_PLUGIN_WPBOOKING . 'includes/wpbooking-api.php' );
+
+/************************************************************
+ * Registrar Controlador de Reservas
+ ************************************************************/
+include_once( DIRECTORI_PLUGIN_WPBOOKING . 'includes/wpbooking-reservations.php' );
 
 /************************************************************
  * Registrar CRON
