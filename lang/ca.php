@@ -64,4 +64,10 @@ return [
     'Search services' => 'Cercar serveis',
     'No services found' => 'No s\'han trobat serveis',
     'Multiply service price by quantity' => 'Multiplicar el preu del servei per la quantitat',
+    'Tickets' => 'Entrades',
+    'Free' => 'Gratuït',
+    'Total people' => 'Total de persones',
+    'Total price' => 'Preu total',
+    'Total services' => 'Total de serveis',
+    'No tickets or services available for this event.' => 'No hi ha entrades ni serveis disponibles per a aquest esdeveniment.',
 ];

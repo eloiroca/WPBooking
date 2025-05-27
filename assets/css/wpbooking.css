@@ -73,3 +73,60 @@
 .single-wpbooking_event .hour-title {
     font-weight: bold;
 }
+.single-wpbooking_event .wpbooking-event-tickets-title h2,
+.single-wpbooking_event .wpbooking-event-services-title h2 {
+    font-size: 1.25em;
+    margin-top: 20px;
+    font-weight: bold;
+}
+.single-wpbooking_event .wpbooking-ticket-row,
+.single-wpbooking_event .wpbooking-service-row {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+.single-wpbooking_event .wpbooking-ticket-row label,
+.single-wpbooking_event .wpbooking-service-row label {
+    width: 30%;
+}
+.single-wpbooking_event .wpbooking-qty-control {
+    width: 70%;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+}
+.single-wpbooking_event .wpbooking-qty-control button {
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+}
+.single-wpbooking_event .wpbooking-qty-control input {
+    width: 60px;
+    height: 40px;
+    text-align: center;
+    padding: 0;
+}
+.single-wpbooking_event .wpbooking-personas-tickets,
+.single-wpbooking_event .wpbooking-services-list {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 20px;
+}
+
+/* RESONSIVE */
+@media (max-width: 900px) {
+    .single-wpbooking_event .wpbooking-ticket-row label,
+    .single-wpbooking_event .wpbooking-service-row label{
+        width: 70%;
+    }
+    .single-wpbooking_event .wpbooking-qty-control,
+    .single-wpbooking_event .wpbooking-personas-ticket {
+        width: 30%;
+    }
+}

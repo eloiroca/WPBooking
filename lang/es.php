@@ -64,4 +64,10 @@ return [
     'Search services' => 'Buscar servicios',
     'No services found' => 'No se encontraron servicios',
     'Multiply service price by quantity' => 'Multiplicar el precio del servicio por la cantidad',
+    'Tickets' => 'Entradas',
+    'Free' => 'Gratuito',
+    'Total people' => 'Total de personas',
+    'Total price' => 'Precio total',
+    'Total services' => 'Total de servicios',
+    'No tickets or services available for this event.' => 'No hay entradas ni servicios disponibles para este evento.',
 ];

@@ -131,8 +131,22 @@ function wpbooking_event_text_color_metabox_callback($post) {
 }
 
 function wpbooking_is_translating_wpml($post_id, $post_type) {
+    $options = get_option('wpbooking_options', []);
+    $slave_lang = $options['slave_language'] ?? null;
+
+    // Idioma actual
+    $current_lang = apply_filters('wpml_current_language', null);
+
+    // Detectar si es un nuevo post (auto-draft)
+    $status = get_post_status($post_id);
+    if ($status === 'auto-draft') {
+        return $current_lang !== $slave_lang;
+    }
+
+    // Si ya existe, comprobar si es traducción del original
     $default_lang = apply_filters('wpml_default_language', null);
     $original_id = apply_filters('wpml_object_id', $post_id, $post_type, false, $default_lang);
+
     return $original_id != $post_id;
 }
 
