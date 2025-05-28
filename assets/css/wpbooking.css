@@ -121,7 +121,15 @@
 .single-wpbooking_event .wpbooking-ticket-total {
     margin: 20px 0 20px 0;
 }
-
+.single-wpbooking_event #wpbooking-reserve-form {
+    margin-bottom: 20px;
+}
+.single-wpbooking_event .wpbooking-reserve-button {
+    background-color: #77a464;
+}
+.single-wpbooking_event .wpbooking-reserve-button:hover {
+    background-color: #55555e;
+}
 /* RESONSIVE */
 @media (max-width: 900px) {
     .single-wpbooking_event .wpbooking-ticket-row label,

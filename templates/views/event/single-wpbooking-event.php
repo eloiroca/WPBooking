@@ -296,7 +296,9 @@ echo '<div>' . get_the_content() . '</div>';
                     },
                     success: function (res) {
                         if (res.success) {
-                            window.location.href = '/cart'; // o wc_get_cart_url()
+                            const lang = window.location.pathname.split('/')[1]; // Detecta idioma actual
+                            const langPrefix = lang && lang.length === 2 ? `/${lang}` : ''; // Si es 'es', 'ca', etc.
+                            window.location.href = `${langPrefix}/cart/`;
                         } else {
                             alert(res.data.message || 'Error al reservar');
                         }
@@ -313,7 +315,24 @@ echo '<div>' . get_the_content() . '</div>';
                     }
                 });
             });
+
+            // Reparar el canvio de idioma en WPML
+            const urlParams = new URLSearchParams(window.location.search);
+            const dateParam = urlParams.get('d');
+
+            if (dateParam) {
+                $('.wpml-ls-menu-item a').each(function () {
+                    const href = $(this).attr('href');
+                    if (href && !href.includes('?')) {
+                        $(this).attr('href', href + '?d=' + dateParam);
+                    } else if (href && !href.includes('d=')) {
+                        $(this).attr('href', href + '&d=' + dateParam);
+                    }
+                });
+            }
         });
+
+
     </script>
 
 <?php
