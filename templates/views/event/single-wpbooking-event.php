@@ -3,11 +3,12 @@ get_header();
 
 while (have_posts()) : the_post();
     // Obtener los valores personalizados de precio, hora de inicio y hora de finalización
-    $price = get_post_meta(get_the_ID(), '_price', true);
-    $hour_start = get_post_meta(get_the_ID(), '_hour_start', true);
-    $hour_end = get_post_meta(get_the_ID(), '_hour_end', true);
-    $color = get_post_meta(get_the_ID(), '_color', true);
-    $event_id = get_the_ID();
+    $event_id = wpbooking_get_original_post_id(get_the_ID(), 'wpbooking_event');
+    $price = get_post_meta($event_id, '_price', true);
+    $hour_start = get_post_meta($event_id, '_hour_start', true);
+    $hour_end = get_post_meta($event_id, '_hour_end', true);
+    $color = get_post_meta($event_id, '_color', true);
+
 
     // Obtener las opciones de configuración
     $options = get_option('wpbooking_options');
@@ -291,6 +292,7 @@ echo '<div>' . get_the_content() . '</div>';
                         event_id: $('#wpbooking-reserve-form input[name="event_id"]').val(),
                         personas_json: JSON.stringify(personas),
                         services_json: JSON.stringify(services),
+                        date: '<?php echo esc_js($date); ?>',
                     },
                     success: function (res) {
                         if (res.success) {

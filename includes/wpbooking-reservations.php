@@ -3,7 +3,7 @@ add_action('wp_ajax_wpbooking_add_to_cart', 'wpbooking_add_to_cart_handler');
 add_action('wp_ajax_nopriv_wpbooking_add_to_cart', 'wpbooking_add_to_cart_handler');
 
 function wpbooking_add_to_cart_handler() {
-    if (!isset($_POST['event_id'], $_POST['personas_json'], $_POST['services_json'])) {
+    if (!isset($_POST['event_id'], $_POST['personas_json'], $_POST['services_json'], $_POST['date'])) {
         wp_send_json_error(['message' => __wpb('Invalid request')]);
     }
 
@@ -17,27 +17,43 @@ function wpbooking_add_to_cart_handler() {
 
     // Total precio
     $total_price = 0;
+    $date = $_POST['date'];
+    $detalle = [];
+    // Obtener las opciones de configuración
+    $options = get_option('wpbooking_options', []);
+    $multiply_price = !empty($options['multiply_price_qty']);
+    $multiply_service_price = !empty($options['multiply_service_price_qty']);
+
+    $detalle[] = '<b>' . __wpb('Date') . '</b>: ' . esc_html($date);
+    $detalle[] = '<b>' . __wpb('Hour start') . '</b>: ' . get_post_meta($event_id, '_hour_start', true);
+    $detalle[] = '<b>' . __wpb('Hour end') . '</b>: ' . get_post_meta($event_id, '_hour_end', true);
 
     foreach ($personas as $id => $qty) {
+        $qty = intval($qty);
+        if ($qty < 1) continue;
         $precio = floatval(get_post_meta($id, '_price', true));
-        $total_price += $precio * intval($qty);
+        $line_total = $multiply_price ? ($precio * $qty) : $precio;
+        $total_price += $line_total;
+        $detalle[] = "$qty x <b>" . get_the_title($id) . " (" . wc_price($precio) . ")</b>";
     }
 
     foreach ($services as $id => $qty) {
+        $qty = intval($qty);
+        if ($qty < 1) continue;
         $precio = floatval(get_post_meta($id, '_price', true));
-        $total_price += $precio * intval($qty);
+        $line_total = $multiply_service_price ? ($precio * $qty) : $precio;
+        $total_price += $line_total;
+        $detalle[] = "$qty x <b>" . get_the_title($id) . " (" . wc_price($precio) . ")</b>";
     }
 
-    // Crear producto ficticio si no existe
     $product_id = wpbooking_get_or_create_fake_product();
 
-    // Añadir al carrito
     WC()->cart->add_to_cart($product_id, 1, 0, [], [
         'event_id' => $event_id,
         'personas' => $personas,
         'services' => $services,
         'custom_price' => $total_price,
-        'custom_name' => get_the_title($event_id),
+        'custom_name' => get_the_title($event_id) . ':<br> ' . implode('<br> ', $detalle),
     ]);
 
     wp_send_json_success(['message' => __wpb('Event added to cart successfully')]);
@@ -78,4 +94,7 @@ add_filter('woocommerce_before_calculate_totals', function ($cart) {
         }
     }
 }, 20, 1);
+
+
+
 

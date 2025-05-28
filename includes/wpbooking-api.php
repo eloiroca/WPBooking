@@ -70,7 +70,8 @@ function wpbooking_get_events($request) {
         $translated_id = apply_filters('wpml_object_id', $postId, 'wpbooking_event', true, $current_lang);
         $translated_post = get_post($translated_id);
         if ($translated_post && isset($event['title'])) {
-            $event['title'] = $translated_post->post_title;
+            $calendar_title = get_post_meta($translated_id, '_calendar_title', true);
+            $event['title'] = $calendar_title ?: $translated_post->post_title;
         }
 
         // Obtenemos los colores del postId para asignar el color al evento

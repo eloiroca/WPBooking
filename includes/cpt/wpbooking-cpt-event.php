@@ -150,6 +150,11 @@ function wpbooking_is_translating_wpml($post_id, $post_type) {
     return $original_id != $post_id;
 }
 
+function wpbooking_get_original_post_id($post_id, $post_type) {
+    $default_lang = apply_filters('wpml_default_language', null);
+    return apply_filters('wpml_object_id', $post_id, $post_type, false, $default_lang);
+}
+
 // Guardar datos del evento
 add_action('save_post_wpbooking_event', function ($post_id) {
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
