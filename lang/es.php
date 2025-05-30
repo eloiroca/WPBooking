@@ -65,6 +65,7 @@ return [
     'No services found' => 'No se encontraron servicios',
     'Multiply service price by quantity' => 'Multiplicar el precio del servicio por la cantidad',
     'Tickets' => 'Entradas',
+    'Ticket' => 'Entrada',
     'Free' => 'Gratuito',
     'Total people' => 'Total de personas',
     'Total price' => 'Precio total',
@@ -74,4 +75,5 @@ return [
     'You must select at least one person or service' => 'Debes seleccionar al menos una persona o servicio',
     'Event added to cart successfully' => 'Evento añadido al carrito correctamente',
     'Invalid request' => 'Solicitud inválida',
+    'Buy Gift Voucher' => 'Comprar Vale Regalo',
 ];

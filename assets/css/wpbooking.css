@@ -130,6 +130,13 @@
 .single-wpbooking_event .wpbooking-reserve-button:hover {
     background-color: #55555e;
 }
+.single-wpbooking_event .wpbooking-reserve-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+.single-wpbooking_event .wpbooking-event-ticket {
+    padding: 20px;
+}
 /* RESONSIVE */
 @media (max-width: 900px) {
     .single-wpbooking_event .wpbooking-ticket-row label,

@@ -253,6 +253,8 @@ echo '<div>' . get_the_content() . '</div>';
 
             // Enviar el formulario al reservar
             $('#wpbooking-reserve-form').on('submit', function (e) {
+                // Desactivar el boton para evitar múltiples envíos
+                $('#wpbooking-reserve-form').find('.wpbooking-reserve-button').prop('disabled', true);
                 e.preventDefault();
 
                 const personas = {};
@@ -298,7 +300,7 @@ echo '<div>' . get_the_content() . '</div>';
                         if (res.success) {
                             const lang = window.location.pathname.split('/')[1]; // Detecta idioma actual
                             const langPrefix = lang && lang.length === 2 ? `/${lang}` : ''; // Si es 'es', 'ca', etc.
-                            window.location.href = `${langPrefix}/cart/`;
+                            window.location.href = `${langPrefix}/checkout/`;
                         } else {
                             alert(res.data.message || 'Error al reservar');
                         }
@@ -312,6 +314,10 @@ echo '<div>' . get_the_content() . '</div>';
                                 popup: 'swal-custom'
                             }
                         });
+                    },
+                    complete: function () {
+                        // Reactivar el botón después de la solicitud
+                        $('#wpbooking-reserve-form').find('.wpbooking-reserve-button').prop('disabled', false);
                     }
                 });
             });

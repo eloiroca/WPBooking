@@ -59,8 +59,67 @@ function wpbooking_add_to_cart_handler() {
     wp_send_json_success(['message' => __wpb('Event added to cart successfully')]);
 }
 
+add_action('wp_ajax_wpbooking_add_to_cart_gift', 'wpbooking_add_to_cart_gift_handler');
+add_action('wp_ajax_nopriv_wpbooking_add_to_cart_gift', 'wpbooking_add_to_cart_gift_handler');
 
-function wpbooking_get_or_create_fake_product() {
+function wpbooking_add_to_cart_gift_handler() {
+    if (!isset($_POST['personas_json'])) {
+        wp_send_json_error(['message' => __wpb('Invalid request')]);
+    }
+
+    $personas = json_decode(stripslashes($_POST['personas_json']), true);
+
+    if (!is_array($personas)) {
+        wp_send_json_error(['message' => __wpb('You must select at least one person or service')]);
+    }
+
+    // Total precio
+    $total_price = 0;
+    $detalle = [];
+    // Obtener las opciones de configuración
+    $options = get_option('wpbooking_options', []);
+    $multiply_price = !empty($options['multiply_price_qty']);
+
+    $event_groups = [];
+    // Agrupar personas por evento
+    foreach ($personas as $persona) {
+        $event_name = esc_html($persona['event_name']);
+        $person_name = esc_html($persona['person_name']);
+        $id = intval($persona['id']);
+        $qty = intval($persona['qty']);
+
+        if ($qty < 1) continue;
+
+        $precio = floatval(get_post_meta($id, '_price', true));
+        $line_total = $multiply_price ? ($precio * $qty) : $precio;
+        $total_price += $line_total;
+
+        if (!isset($event_groups[$event_name])) {
+            $event_groups[$event_name] = [];
+        }
+
+        $event_groups[$event_name][] = "$qty x <b>" . $person_name . " (" . wc_price($precio) . ") </b>";
+    }
+
+    // Formatear el detalle
+    foreach ($event_groups as $event_name => $details) {
+        $detalle[] = "<small><i>$event_name</i>:</small><br>" . implode('<br>', $details);
+    }
+
+    $product_id = wpbooking_get_or_create_fake_product(true);
+
+    WC()->cart->add_to_cart($product_id, 1, 0, [], [
+        'event_id' => 0, // No hay evento asociado
+        'gift' => true,
+        'personas' => $personas,
+        'custom_price' => $total_price,
+        'custom_name' => __wpb('Buy Gift Voucher') . ':<br> ' . implode('<br> ', $detalle),
+    ]);
+
+    wp_send_json_success(['message' => __wpb('Event added to cart successfully')]);
+}
+
+function wpbooking_get_or_create_fake_product($gift=false) {
     $slug = 'wpbooking-producto-ficticio';
     $existing = get_page_by_path($slug, OBJECT, 'product');
     if ($existing) return $existing->ID;

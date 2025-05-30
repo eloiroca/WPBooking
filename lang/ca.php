@@ -65,6 +65,7 @@ return [
     'No services found' => 'No s\'han trobat serveis',
     'Multiply service price by quantity' => 'Multiplicar el preu del servei per la quantitat',
     'Tickets' => 'Entrades',
+    'Ticket' => 'Entrada',
     'Free' => 'Gratuït',
     'Total people' => 'Total de persones',
     'Total price' => 'Preu total',
@@ -74,4 +75,5 @@ return [
     'You must select at least one person or service' => 'Heu de seleccionar almenys una persona o servei',
     'Event added to cart successfully' => 'Esdeveniment afegit al carretó correctament',
     'Invalid request' => 'Sol·licitud no vàlida',
+    'Buy Gift Voucher' => 'Comprar Xec Regal',
 ];
