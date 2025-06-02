@@ -124,9 +124,14 @@ include_once( DIRECTORI_PLUGIN_WPBOOKING . 'includes/wpbooking-shortcodes.php' )
 include_once( DIRECTORI_PLUGIN_WPBOOKING . 'includes/wpbooking-api.php' );
 
 /************************************************************
- * Registrar Controlador de Reservas
+ * Registrar Controlador de Reservas (Add to Cart)
  ************************************************************/
 include_once( DIRECTORI_PLUGIN_WPBOOKING . 'includes/wpbooking-reservations.php' );
+
+/************************************************************
+ * Registrar Hooks Woocommerce (Checkout, Order, etc.)
+ ************************************************************/
+include_once ( DIRECTORI_PLUGIN_WPBOOKING . 'includes/wpbooking-order.php' );
 
 /************************************************************
  * Registrar CRON

@@ -76,4 +76,6 @@ return [
     'Event added to cart successfully' => 'Esdeveniment afegit al carretó correctament',
     'Invalid request' => 'Sol·licitud no vàlida',
     'Buy Gift Voucher' => 'Comprar Xec Regal',
+    'Booking dates' => 'Dates reserva',
+    'Coupon' => 'Cupó',
 ];

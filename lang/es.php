@@ -76,4 +76,6 @@ return [
     'Event added to cart successfully' => 'Evento añadido al carrito correctamente',
     'Invalid request' => 'Solicitud inválida',
     'Buy Gift Voucher' => 'Comprar Vale Regalo',
+    'Booking dates' => 'Fechas reserva',
+    'Coupon' => 'Cupón',
 ];

@@ -53,6 +53,9 @@ function wpbooking_add_to_cart_handler() {
         'personas' => $personas,
         'services' => $services,
         'custom_price' => $total_price,
+        'date' => $date,
+        'hour_start' => get_post_meta($event_id, '_hour_start', true),
+        'hour_end' => get_post_meta($event_id, '_hour_end', true),
         'custom_name' => get_the_title($event_id) . ':<br> ' . implode('<br> ', $detalle),
     ]);
 
@@ -153,6 +156,31 @@ add_filter('woocommerce_before_calculate_totals', function ($cart) {
         }
     }
 }, 20, 1);
+
+// Guardar los campos del producto ficticio en la linea del pedido
+add_action('woocommerce_checkout_create_order_line_item', 'guardar_meta_info_en_pedido', 10, 4);
+function guardar_meta_info_en_pedido($item, $cart_item_key, $values, $order) {
+    if (!empty($values['gift'])) {
+        $item->add_meta_data('_wpb_gift', $values['gift'], true);
+    }
+    // Guardar la Fecha del evento
+    //if (!empty($values['date'])) {
+    //    $item->add_meta_data('_wpb_date', $values['date'], true);
+    //}
+    // Guardar la hora de inicio
+    //if (!empty($values['hour_start'])) {
+    //    $item->add_meta_data('_wpb_hour_start', $values['hour_start'], true);
+    //}
+    // Guardar la hora de fin
+    //if (!empty($values['hour_end'])) {
+    //    $item->add_meta_data('_wpb_hour_end', $values['hour_end'], true);
+    //}
+    // Guardar el ID del evento
+    //if (!empty($values['event_id'])) {
+    //    $item->add_meta_data('_wpb_event_id', $values['event_id'], true);
+    //}
+}
+
 
 
 
