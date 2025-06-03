@@ -78,4 +78,10 @@ return [
     'Buy Gift Voucher' => 'Comprar Vale Regalo',
     'Booking dates' => 'Fechas reserva',
     'Coupon' => 'Cupón',
+    'Specify a price per day of parking' => 'Especificar un precio por día de estacionamiento',
+    'Select dates' => 'Seleccionar fechas',
+    'Number plate' => 'Matrícula',
+    'Total days' => 'Total de días',
+    'You must select a date range and enter a number plate' => 'Debes seleccionar un rango de fechas e ingresar una matrícula',
+    'Buy Parking' => 'Comprar Aparcamiento',
 ];

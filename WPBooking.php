@@ -80,6 +80,11 @@ function registrar_estilos_scripts($hook = '') {
     wp_enqueue_script( 'script-wpbooking-calendar', URL_PLUGIN_WPBOOKING . 'assets/js/fullcalendar/index.global.min.js', array(), $versio );
     wp_enqueue_script( 'script-wpbooking-locale-calendar', URL_PLUGIN_WPBOOKING . 'assets/js/fullcalendar/locales-all.global.min.js', array('script-wpbooking-calendar'), $versio );
 
+    // Datepicker
+    wp_enqueue_style( 'style-wpbooking-datepicker', URL_PLUGIN_WPBOOKING . 'assets/css/datepicker/flatpickr.min.css', array(), $versio);
+    wp_enqueue_script( 'script-wpbooking-datepicker', URL_PLUGIN_WPBOOKING . 'assets/js/datepicker/flatpickr.js', array(), $versio , true );
+    wp_enqueue_script( 'script-wpbooking-datepicker-locale', URL_PLUGIN_WPBOOKING . 'assets/js/datepicker/flatpickr-'.LANG_WPBOOKING.'.js', array('script-wpbooking-datepicker'), $versio, true );
+
     // WPBooking
     wp_enqueue_style( 'style-wpbooking', URL_PLUGIN_WPBOOKING. 'assets/css/wpbooking.css', array(), $versio);
     wp_enqueue_script( 'script-wpbooking', URL_PLUGIN_WPBOOKING . 'assets/js/wpbooking.js', array('script-wpbooking-locale-calendar'), $versio, true );
@@ -95,6 +100,7 @@ function registrar_estilos_scripts($hook = '') {
         'nonce' => wp_create_nonce('wp_rest'),
         'error_message' => __wpb('An error occurred while saving the event'),
         'error_select_person_or_service' => __wpb('You must select at least one person or service'),
+        'error_dates_and_plate_number' => __wpb('You must select a date range and enter a number plate'),
     ));
 
 }

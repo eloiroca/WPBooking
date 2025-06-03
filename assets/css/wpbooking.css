@@ -89,8 +89,16 @@
     gap: 20px;
 }
 .single-wpbooking_event .wpbooking-ticket-row label,
-.single-wpbooking_event .wpbooking-service-row label {
+.single-wpbooking_event .wpbooking-service-row label,
+.single-wpbooking_event .wpbooking-parking-row label {
     width: 30%;
+}
+.single-wpbooking_event .wpbooking-parking-row {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
 }
 .single-wpbooking_event .wpbooking-qty-control {
     width: 70%;

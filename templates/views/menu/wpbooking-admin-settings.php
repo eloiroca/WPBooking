@@ -60,6 +60,12 @@ $options = get_option('wpbooking_options', []);
                         <?php checked(1, $options['multiply_service_price_qty'] ?? 0); ?> />
                 </td>
             </tr>
+            <tr valign="top">
+                <th scope="row"><?php echo __wpb('Specify a price per day of parking'); ?></th>
+                <td>
+                    <input type="text" name="wpbooking_options[parking_price_per_day]" value="<?php echo esc_attr($options['parking_price_per_day'] ?? ''); ?>" />
+                </td>
+            </tr>
         </table>
         <?php submit_button(); ?>
     </form>

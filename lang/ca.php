@@ -78,4 +78,10 @@ return [
     'Buy Gift Voucher' => 'Comprar Xec Regal',
     'Booking dates' => 'Dates reserva',
     'Coupon' => 'Cupó',
+    'Specify a price per day of parking' => 'Especificar un preu per dia d\'aparcament',
+    'Select dates' => 'Seleccionar dates',
+    'Number plate' => 'Matrícula',
+    'Total days' => 'Total de dies',
+    'You must select a date range and enter a number plate' => 'Heu de seleccionar un interval de dates i introduir una matrícula',
+    'Buy Parking' => 'Comprar Aparcament',
 ];

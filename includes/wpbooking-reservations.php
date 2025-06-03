@@ -122,6 +122,36 @@ function wpbooking_add_to_cart_gift_handler() {
     wp_send_json_success(['message' => __wpb('Event added to cart successfully')]);
 }
 
+add_action('wp_ajax_wpbooking_add_to_cart_parking', 'wpbooking_add_to_cart_parking_handler');
+add_action('wp_ajax_nopriv_wpbooking_add_to_cart_parking', 'wpbooking_add_to_cart_parking_handler');
+
+function wpbooking_add_to_cart_parking_handler() {
+    if (!isset($_POST['total_days'], $_POST['number_plate'])) {
+        wp_send_json_error(['message' => __wpb('Invalid request')]);
+    }
+
+    $total_days = intval($_POST['total_days']);
+    $detalle = [];
+
+    // Obtener las opciones de configuración
+    $options = get_option('wpbooking_options', []);
+    $price = !empty($options['parking_price_per_day']) ? floatval($options['parking_price_per_day']) : 0;
+
+    $total_price = $total_days * $price;
+    $detalle[] = "$total_days x <b>" . $price . " (" . wc_price($total_price) . ") </b><br>";
+    $detalle[] = '<b>' . __wpb('Number plate') . '</b>: ' . esc_html($_POST['number_plate']);
+
+    $product_id = wpbooking_get_or_create_fake_product(true);
+
+    WC()->cart->add_to_cart($product_id, 1, 0, [], [
+        'event_id' => 0, // No hay evento asociado
+        'custom_price' => $total_price,
+        'custom_name' => __wpb('Buy Parking') . ':<br> ' . implode('<br> ', $detalle),
+    ]);
+
+    wp_send_json_success(['message' => __wpb('Event added to cart successfully')]);
+}
+
 function wpbooking_get_or_create_fake_product($gift=false) {
     $slug = 'wpbooking-producto-ficticio';
     $existing = get_page_by_path($slug, OBJECT, 'product');

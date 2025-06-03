@@ -19,3 +19,13 @@ function shortcode_wpbooking_gift_events() {
     $content = ob_get_clean();
     return $content;
 }
+/************************************************************
+ * Shortcode para mostrar reservas de plazas de parking
+ ************************************************************/
+add_shortcode('wpbooking_parking', 'shortcode_wpbooking_parking');
+function shortcode_wpbooking_parking() {
+    ob_start();
+    include(DIRECTORI_PLUGIN_WPBOOKING."/templates/shortcode/wpbooking-parking.php");
+    $content = ob_get_clean();
+    return $content;
+}
