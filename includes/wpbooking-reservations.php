@@ -187,6 +187,13 @@ add_filter('woocommerce_before_calculate_totals', function ($cart) {
     }
 }, 20, 1);
 
+add_filter('woocommerce_add_to_cart_fragments', function ($fragments) {
+    ob_start();
+    woocommerce_mini_cart();
+    $fragments['div.widget_shopping_cart_content'] = ob_get_clean();
+    return $fragments;
+});
+
 // Guardar los campos del producto ficticio en la linea del pedido
 add_action('woocommerce_checkout_create_order_line_item', 'guardar_meta_info_en_pedido', 10, 4);
 function guardar_meta_info_en_pedido($item, $cart_item_key, $values, $order) {
