@@ -92,7 +92,7 @@ function wpbooking_person_price_metabox_callback($post) {
     }
     $price = get_post_meta($post->ID, '_price', true);
     ?>
-    <input type="number" step="0.01" name="price" value="<?= esc_attr($price); ?>" style="width:100%;">
+    <input type="number" step="0.01" min="0" name="price" value="<?= esc_attr($price); ?>" style="width:100%;">
     <?php
 }
 

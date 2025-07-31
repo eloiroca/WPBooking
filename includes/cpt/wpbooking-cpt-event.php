@@ -73,7 +73,7 @@ function wpbooking_event_meta_callback($post) {
     $can_reserve = get_post_meta($post->ID, '_can_reserve', true);
     ?>
     <label><?php echo __wpb('Price'); ?>:
-    <input type="text" name="price" value="<?php echo esc_attr($price); ?>" />
+    <input type="number" step="0.01" min="0" name="price" value="<?php echo esc_attr($price); ?>" />
     </label><br><br>
     <label><?php echo __wpb('Hour start'); ?>:
         <input type="time" name="hour_start" value="<?php echo esc_attr($hour_start); ?>" />
