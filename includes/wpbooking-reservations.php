@@ -187,6 +187,12 @@ add_filter('woocommerce_before_calculate_totals', function ($cart) {
     }
 }, 20, 1);
 
+add_filter('woocommerce_cart_item_name', function ($name, $cart_item, $cart_item_key) {
+    if (!empty($cart_item['custom_name'])) {
+        return wp_kses_post($cart_item['custom_name']);
+    }
+    return $name;
+}, 10, 3);
 add_filter('woocommerce_add_to_cart_fragments', function ($fragments) {
     ob_start();
     woocommerce_mini_cart();
