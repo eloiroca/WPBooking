@@ -155,4 +155,14 @@
     .single-wpbooking_event .wpbooking-personas-ticket {
         width: 30%;
     }
+    .fc .fc-daygrid-day-number {
+        padding: 0 5px 0 5px;
+        height: 20px;
+    }
+    .fc .fc-toolbar-title {
+        font-size: 1.4em;
+    }
+    .fc-header-toolbar > .fc-toolbar-chunk:nth-child(2) {
+        flex: auto;
+    }
 }
