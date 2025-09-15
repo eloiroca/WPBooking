@@ -201,36 +201,6 @@ function wpbooking_delete_event($request) {
     }
 }
 
-// Guardar orden de los eventos (orden de los posts de eventos)
-function wpbooking_save_events_order($request) {
-    try {
-        $params = $request->get_json_params();
-        if (!isset($params['order']) || !is_array($params['order'])) {
-            return rest_ensure_response([
-                'success' => false,
-                'message' => __wpb('Invalid order payload'),
-            ]);
-        }
-
-        $order = array_values(array_filter($params['order'], function($v){ return is_numeric($v) || is_string($v); }));
-
-        // Asignar _order = índice
-        foreach ($order as $index => $post_id) {
-            $pid = intval($post_id);
-            if ($pid > 0) {
-                update_post_meta($pid, '_order', $index);
-            }
-        }
-
-        return rest_ensure_response([
-            'success' => true,
-            'message' => __wpb('Order saved successfully'),
-        ]);
-    } catch (Throwable $e) {
-        return new WP_Error('error_orden', __wpb('Error saving order') . ' ' . $e->getMessage(), ['status' => 500]);
-    }
-}
-
 function wpbooking_encrypt_date($date) {
     return rtrim(strtr(base64_encode($date), '+/', '-_'), '=');
 }
