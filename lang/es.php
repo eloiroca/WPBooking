@@ -84,4 +84,5 @@ return [
     'Total days' => 'Total de días',
     'You must select a date range and enter a number plate' => 'Debes seleccionar un rango de fechas e ingresar una matrícula',
     'Buy Parking' => 'Comprar Aparcamiento',
+    'Order' => 'Orden'
 ];

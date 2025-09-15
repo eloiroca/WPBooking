@@ -84,4 +84,5 @@ return [
     'Total days' => 'Total de dies',
     'You must select a date range and enter a number plate' => 'Heu de seleccionar un interval de dates i introduir una matrícula',
     'Buy Parking' => 'Comprar Aparcament',
+    'Order' => 'Ordre'
 ];
