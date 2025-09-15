@@ -71,6 +71,7 @@ function wpbooking_event_meta_callback($post) {
     $hour_end = get_post_meta($post->ID, '_hour_end', true);
     $enabled = get_post_meta($post->ID, '_enabled', true);
     $can_reserve = get_post_meta($post->ID, '_can_reserve', true);
+    $order = get_post_meta($post->ID, '_order', true);
     ?>
     <label><?php echo __wpb('Price'); ?>:
     <input type="number" step="0.01" min="0" name="price" value="<?php echo esc_attr($price); ?>" />
@@ -86,6 +87,10 @@ function wpbooking_event_meta_callback($post) {
     </label><br><br>
     <label><?php echo __wpb('Can reserve'); ?>:
         <input type="checkbox" name="can_reserve" value="1" <?= checked($can_reserve, '1', false) ?> />
+    </label><br><br>
+    <label><?php echo __wpb('Order'); ?>:
+        <input type="number" step="1" min="0" name="order" value="<?php echo esc_attr($order ?: '0'); ?>" />
+    </label>
 
 
     <?php
@@ -167,6 +172,7 @@ add_action('save_post_wpbooking_event', function ($post_id) {
     update_post_meta($post_id, '_hour_end', sanitize_text_field($_POST['hour_end'] ?? ''));
     update_post_meta($post_id, '_enabled', isset($_POST['enabled']) ? '1' : '0');
     update_post_meta($post_id, '_can_reserve', isset($_POST['can_reserve']) ? '1' : '0');
+    update_post_meta($post_id, '_order', intval($_POST['order'] ?? '0'));
 });
 
 // Añadir columnas personalizadas
