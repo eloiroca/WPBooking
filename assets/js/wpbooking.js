@@ -37,6 +37,15 @@ document.addEventListener('DOMContentLoaded', function() {
         businessHours: true, // Hacer que el fin de semana salga en gris
         expandRows: true,
         dayMaxEvents: true, // allow "more" link when too many events
+        // Ordenar eventos: primero por 'order' (menor primero), luego por título
+        eventOrder: function(a, b) {
+            const pa = (a.extendedProps && typeof a.extendedProps.order !== 'undefined') ? parseInt(a.extendedProps.order, 10) : 0;
+            const pb = (b.extendedProps && typeof b.extendedProps.order !== 'undefined') ? parseInt(b.extendedProps.order, 10) : 0;
+            if (pa !== pb) return pa - pb;
+            const ta = (a.title || '').toString();
+            const tb = (b.title || '').toString();
+            return ta.localeCompare(tb, undefined, { sensitivity: 'base' });
+        },
         events: function(fetchInfo, successCallback, failureCallback) {
             const url = new URL('/wp-json/wpbooking/v1/events', window.location.origin);
             url.searchParams.append('start', fetchInfo.startStr);
