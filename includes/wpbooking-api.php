@@ -53,8 +53,8 @@ function wpbooking_get_events($request) {
         $event_start = $event['start'] ?? '';
         $event_end = $event['end'] ?: $event_start;
 
-        // Ignorar eventos ya pasados
-        if ($event_end < date('Y-m-d')) continue;
+        // Ignorar eventos ya pasados (end es a las 00:00, así que el mismo día ya está pasado)
+        if ($event_end <= date('Y-m-d')) continue;
 
         // Ignorar si no está en el rango
         if ($event_start > $end || $event_end < $start) continue;

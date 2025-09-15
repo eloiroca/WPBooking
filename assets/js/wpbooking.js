@@ -123,16 +123,18 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         eventClick: function(info) {
             if (!WPBookingData.is_admin) {
+                // Mostrar el modal si la fecha seleccionada es hoy o anterior a hoy
                 const today = new Date();
+                today.setHours(0,0,0,0);
                 const eventDate = new Date(info.event.start);
-                const isToday = eventDate.toDateString() === today.toDateString();
+                eventDate.setHours(0,0,0,0);
 
-                if (isToday) {
+                if (eventDate <= today) {
                     info.jsEvent.preventDefault(); // Evita que siga el enlace
                     MicroModal.show('modal-wpbooking-exhausted');
                     return;
                 }
-                return; // Permitir que el enlace se abra si no es hoy
+                return; // Permitir que el enlace se abra si es una fecha futura
             }
 
             if (confirm("¿Quieres eliminar este evento?")) {
