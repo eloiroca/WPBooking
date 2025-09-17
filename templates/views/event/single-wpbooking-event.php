@@ -19,7 +19,7 @@ while (have_posts()) : the_post();
     $persons = get_posts([
         'post_type' => 'wpbooking_person',
         'posts_per_page' => -1,
-        'meta_key' => '_price',
+        'meta_key' => '_order',
         'orderby' => 'meta_value_num',
         'order' => 'ASC',
     ]);

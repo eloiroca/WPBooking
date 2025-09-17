@@ -41,6 +41,14 @@ add_action('add_meta_boxes', function () {
         'wpbooking_person',
         'side'
     );
+    // Orden de aparición
+    add_meta_box(
+        'wpbooking_person_order_metabox',
+        __wpb('Order'),
+        'wpbooking_person_order_metabox_callback',
+        'wpbooking_person',
+        'side'
+    );
     // Cantidades
     add_meta_box(
         'wpbooking_person_qty_metabox',
@@ -96,6 +104,18 @@ function wpbooking_person_price_metabox_callback($post) {
     <?php
 }
 
+// Metabox orden
+function wpbooking_person_order_metabox_callback($post) {
+    if (wpbooking_is_translating_wpml($post->ID, 'wpbooking_person')) {
+        echo '<p style="color: #d63638; font-weight: bold;">' . esc_html(__wpb('Editing translation. These fields are managed from the primary language.')) . '</p>';
+        return;
+    }
+    $order = get_post_meta($post->ID, '_order', true);
+    ?>
+    <input type="number" step="1" min="0" name="order" value="<?php echo esc_attr($order ?: '0'); ?>" style="width:100%;">
+    <?php
+}
+
 // Metabox cantidades
 function wpbooking_person_qty_metabox_callback($post) {
     if (wpbooking_is_translating_wpml($post->ID, 'wpbooking_person')) {
@@ -117,6 +137,7 @@ add_action('save_post_wpbooking_person', function ($post_id) {
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
 
     update_post_meta($post_id, '_price', sanitize_text_field($_POST['price'] ?? ''));
+    update_post_meta($post_id, '_order', sanitize_text_field($_POST['order'] ?? '0'));
     update_post_meta($post_id, '_min', sanitize_text_field($_POST['min'] ?? ''));
     update_post_meta($post_id, '_max', sanitize_text_field($_POST['max'] ?? ''));
 
