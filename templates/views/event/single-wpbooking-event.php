@@ -104,7 +104,7 @@ while (have_posts()) : the_post();
                 $nombre = get_the_title($persona_id);
                 $precio = get_post_meta($persona_id, '_price', true);
                 $min = get_post_meta($persona_id, '_min', true) ?: 0;
-                $max = get_post_meta($persona_id, '_max', true) ?: 10;
+                $max = get_post_meta($persona_id, '_max', true) ?: 100;
                 $precio_texto = $precio == 0 ? __wpb('Free') : number_format($precio, 2) . ' €';
 
                 echo '<div class="wpbooking-ticket-row" data-id="' . esc_attr($persona_id) . '" data-price="' . esc_attr($precio) . '">';
