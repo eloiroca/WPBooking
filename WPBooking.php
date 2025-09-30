@@ -36,20 +36,21 @@ if (!function_exists('__wpb')) {
 
         if ($translations !== null) return $translations;
 
-        $lang = defined('LANG_WPBOOKING') ? LANG_WPBOOKING : 'es';
+        $lang = defined('LANG_WPBOOKING') ? LANG_WPBOOKING : 'en';
         $path = DIRECTORI_PLUGIN_WPBOOKING . "lang/$lang.php";
 
-        if (!file_exists($path)) {
-            $path = DIRECTORI_PLUGIN_WPBOOKING . "lang/es.php";
+        if (file_exists($path)) {
+            $translations = include $path;
+        } else {
+            $translations = []; // si no existe el archivo, usar inglés (cadenas originales)
         }
 
-        $translations = include $path;
         return $translations;
     }
 
     function __wpb($key) {
         $translations = wpbooking_translations_array();
-        return isset($translations[$key]) ? $translations[$key] : $key;
+        return $translations[$key] ?? $key;
     }
 }
 
