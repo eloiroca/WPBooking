@@ -44,7 +44,7 @@ function wpbooking_get_events($request) {
 
         // Filtrar por idioma esclavo
         $lang = apply_filters('wpml_post_language_details', null, $postId);
-        if (!$lang || $lang['language_code'] !== $slave_lang) continue;
+        if (is_wp_error($lang) || !$lang || !isset($lang['language_code']) || $lang['language_code'] !== $slave_lang) continue;
 
         // Ignorar si no está habilitado
         $enabled = get_post_meta($postId, '_enabled', true);
