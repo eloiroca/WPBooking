@@ -40,6 +40,8 @@ $price = !empty($options['parking_price_per_day']) ? floatval($options['parking_
 
     <form id="wpbooking-reserve-form" method="post" action="<?php echo admin_url('admin-post.php'); ?>">
         <input type="hidden" name="action" value="wpbooking_add_to_cart">
+        <input type="hidden" name="start_date" id="wpbooking-start-date">
+        <input type="hidden" name="end_date" id="wpbooking-end-date">
         <input type="hidden" name="total_days" id="wpbooking-total-days">
         <input type="hidden" name="number_plate" id="wpbooking-number-plate">
         <button type="submit" class="wpbooking-reserve-button"><?php echo __wpb('Reserve') ?></button>
@@ -64,6 +66,9 @@ $price = !empty($options['parking_price_per_day']) ? floatval($options['parking_
                     const diffTime = Math.abs(end - start);
                     const totalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                     const total = totalDays * <?php echo $price; ?>;
+
+                    $('#wpbooking-start-date').val(start.toLocaleDateString('es-ES'));
+                    $('#wpbooking-end-date').val(end.toLocaleDateString('es-ES'));
 
                     $('#wpbooking-total-price').text(total.toFixed(2) + ' €');
                     $('#wpbooking-total-count').text(totalDays);
@@ -101,6 +106,7 @@ $price = !empty($options['parking_price_per_day']) ? floatval($options['parking_
                 data: {
                     action: 'wpbooking_add_to_cart_parking',
                     total_days: $('#wpbooking-total-days').val(),
+                    selected_days: $('#wpbooking-start-date').val() + ' - ' + $('#wpbooking-end-date').val(),
                     number_plate: numberPlate,
                 },
                 success: function (res) {
