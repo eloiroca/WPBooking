@@ -10,9 +10,14 @@ function wpbooking_add_to_cart_handler() {
     $event_id = intval($_POST['event_id']);
     $personas = json_decode(stripslashes($_POST['personas_json']), true);
     $services = json_decode(stripslashes($_POST['services_json']), true);
+    $service_options = isset($_POST['service_options_json']) ? json_decode(stripslashes($_POST['service_options_json']), true) : [];
 
     if (!is_array($personas) || !is_array($services)) {
         wp_send_json_error(['message' => __wpb('You must select at least one person or service')]);
+    }
+
+    if (!is_array($service_options)) {
+        $service_options = [];
     }
 
     // Total precio
@@ -43,7 +48,37 @@ function wpbooking_add_to_cart_handler() {
         $precio = floatval(get_post_meta($id, '_price', true));
         $line_total = $multiply_service_price ? ($precio * $qty) : $precio;
         $total_price += $line_total;
-        $detalle[] = "$qty x <b>" . get_the_title($id) . " (" . wc_price($precio) . ")</b>";
+        
+        // Verificar si hay opción seleccionada
+        $has_option = false;
+        $service_detail = "";
+        
+        if (isset($service_options[$id])) {
+            $all_service_options = get_post_meta($id, '_service_options', true);
+            if (is_array($all_service_options)) {
+                $option_index = intval($service_options[$id]);
+                if (isset($all_service_options[$option_index])) {
+                    $option = $all_service_options[$option_index];
+                    $option_price = floatval($option['price']);
+                    $option_description = $option['description'];
+                    
+                    if (!empty($option_description)) {
+                        $has_option = true;
+                        // Mostrar la opción seleccionada en lugar del título del servicio
+                        $total_option_price = $precio + $option_price;
+                        $total_price += $option_price;
+                        $service_detail = "$qty x <b>" . esc_html($option_description) . " (" . wc_price($total_option_price) . ")</b>";
+                    }
+                }
+            }
+        }
+        
+        // Si no hay opción, mostrar el título del servicio normal
+        if (!$has_option) {
+            $service_detail = "$qty x <b>" . get_the_title($id) . " (" . wc_price($precio) . ")</b>";
+        }
+        
+        $detalle[] = $service_detail;
     }
 
     $product_id = wpbooking_get_or_create_fake_product();
@@ -52,6 +87,7 @@ function wpbooking_add_to_cart_handler() {
         'event_id' => $event_id,
         'personas' => $personas,
         'services' => $services,
+        'service_options' => $service_options,
         'custom_price' => $total_price,
         'date' => $date,
         'hour_start' => get_post_meta($event_id, '_hour_start', true),

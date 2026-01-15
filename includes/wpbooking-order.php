@@ -133,7 +133,7 @@ function generar_imagen_cupon($codigo_cupon, $fecha_validez, $producto_cheque_re
     foreach ($lineas_producto as $linea) {
         $linea = trim($linea); // Eliminar espacios en blanco al inicio y al final
         if (!empty($linea) && $contador > 0) { // Evitar líneas vacías y omitir la primera
-            // Quitar el texto que haya entre los ultimos parentesis (PRECIO)
+            // Quitar el texto que haya entre los ultimos parentesis ()
             $linea = preg_replace('/\s*\([^()]*\)\s*$/', '', $linea);
             imagettftext($imagen, $tamano_fuente_producto, 0, $x_producto, $y_producto, $color_negro, $fuente, $linea);
             $y_producto += $espaciado_lineas; // Mover la posición Y para la siguiente línea

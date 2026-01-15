@@ -91,7 +91,7 @@
 .single-wpbooking_event .wpbooking-ticket-row label,
 .single-wpbooking_event .wpbooking-service-row label,
 .single-wpbooking_event .wpbooking-parking-row label {
-    width: 30%;
+    
 }
 .single-wpbooking_event .wpbooking-parking-row {
     display: flex;
@@ -126,25 +126,177 @@
     flex-wrap: nowrap;
     gap: 20px;
 }
-.single-wpbooking_event .wpbooking-ticket-total {
-    margin: 20px 0 20px 0;
+
+.wpbooking-personas-tickets, .wpbooking-service-row {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #fafafa;
 }
+
+/* Estilos para el total de la reserva */
+.wpbooking-ticket-total {
+    background: #ffffff;
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 30px 0 20px 0;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.wpbooking-total-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.wpbooking-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e3e6ea;
+    transition: transform 0.2s ease;
+}
+
+.wpbooking-total-row:hover {
+    transform: translateX(3px);
+}
+
+.wpbooking-total-label {
+    font-size: 1em;
+    color: #495057;
+    font-weight: 600;
+}
+
+.wpbooking-total-value {
+    font-size: 1.1em;
+    color: #212529;
+    font-weight: 700;
+    padding: 4px 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    min-width: 60px;
+    text-align: center;
+}
+
+.wpbooking-total-price-row {
+    background: #ffffff;
+    border: 2px solid #77a464;
+    padding: 15px;
+    margin-top: 5px;
+}
+
+.wpbooking-total-price-row .wpbooking-total-label {
+    font-size: 1.2em;
+    color: #77a464;
+}
+
+.wpbooking-total-price-value {
+    font-size: 1.5em;
+    color: #77a464;
+    background: #ffffff;
+    border: 1px solid #77a464;
+    padding: 8px 16px;
+}
+
+/* Estilos para el botón de reserva */
 .single-wpbooking_event #wpbooking-reserve-form {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
-.single-wpbooking_event .wpbooking-reserve-button {
-    background-color: #77a464;
+
+.wpbooking-reserve-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 18px 32px;
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(135deg, #77a464 0%, #6b9558 100%);
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(119, 164, 100, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
-.single-wpbooking_event .wpbooking-reserve-button:hover {
-    background-color: #55555e;
+
+.wpbooking-reserve-button:hover {
+    background: linear-gradient(135deg, #6b9558 0%, #5f8450 100%);
+    box-shadow: 0 6px 12px rgba(119, 164, 100, 0.4);
+    transform: translateY(-2px);
 }
-.single-wpbooking_event .wpbooking-reserve-button:disabled {
-    background-color: #ccc;
+
+.wpbooking-reserve-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(119, 164, 100, 0.3);
+}
+
+.wpbooking-reserve-button:disabled {
+    background: #ccc;
     cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+    opacity: 0.6;
+}
+
+.wpbooking-button-icon {
+    font-size: 1.3em;
+    animation: pulse 2s infinite;
+}
+
+.wpbooking-button-text {
+    font-weight: 700;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Responsive para total y botón */
+@media (max-width: 480px) {
+    .wpbooking-ticket-total {
+        padding: 15px;
+        margin: 20px 0 15px 0;
+    }
+    
+    .wpbooking-total-row {
+        padding: 8px 12px;
+    }
+    
+    .wpbooking-total-label {
+        font-size: 0.9em;
+    }
+    
+    .wpbooking-total-value {
+        font-size: 1em;
+    }
+    
+    .wpbooking-total-price-value {
+        font-size: 1.2em;
+    }
+    
+    .wpbooking-reserve-button {
+        padding: 15px 24px;
+        font-size: 1.1em;
+    }
 }
 .single-wpbooking_event .wpbooking-event-ticket {
     padding: 20px;
 }
+
 /* RESONSIVE */
 @media (max-width: 900px) {
     .single-wpbooking_event .wpbooking-ticket-row label,
@@ -166,3 +318,226 @@
         flex: auto;
     }
 }
+
+/* Estilos para información del evento (fecha y precio) */
+.wpbooking-event-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 20px;
+    padding: 25px;
+    background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+    border-radius: 12px;
+    margin: 20px 0;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+}
+
+.wpbooking-info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #e3e6ea;
+    min-width: 140px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.wpbooking-info-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+}
+
+.wpbooking-info-label {
+    font-size: 0.9em;
+    color: #6c757d;
+    font-weight: 600;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.wpbooking-info-value {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: #495057;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.wpbooking-price-period {
+    font-size: 0.75em;
+    color: #868e96;
+    font-weight: 400;
+    display: block;
+    margin-top: 2px;
+}
+
+/* Responsive para información del evento */
+@media (max-width: 480px) {
+    .wpbooking-event-info {
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+    }
+    
+    .wpbooking-info-item {
+        min-width: 120px;
+        width: 100%;
+        max-width: 200px;
+    }
+}
+
+/* Estilos para las horas del evento */
+.wpbooking-event-hours {  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+    border-radius: 12px;
+    margin: 20px 0;
+    border: 1px solid #cce7ff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.wpbooking-hour-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 16px;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e3e6ea;
+    min-width: 100px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.wpbooking-hour-label {
+    font-size: 0.85em;
+    color: #6c757d;
+    font-weight: 500;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.wpbooking-hour-value {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #495057;
+}
+
+.wpbooking-hour-separator {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #6c757d;
+    margin: 0 5px;
+}
+
+/* Responsive para horas */
+@media (max-width: 480px) {
+    .wpbooking-event-hours {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+    }
+    
+    .wpbooking-hour-separator {
+        transform: rotate(90deg);
+        margin: 5px 0;
+    }
+    
+    .wpbooking-hour-item {
+        min-width: 80px;
+    }
+}
+
+
+.wpbooking-service-row.radio{
+    flex-direction: column;
+    align-items: flex-start ;
+}
+.wpbooking-service-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.wpbooking-service-description {
+    margin: 10px 0;
+    color: #666;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.wpbooking-service-options {
+    margin-top: 15px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+}
+
+.wpbooking-options-title {
+    margin-bottom: 10px;
+    color: #495057;
+    font-size: 0.95em;
+}
+
+.wpbooking-service-option {
+    margin-bottom: 8px;
+    padding: 8px;
+    background: #ffffff;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+}
+
+.wpbooking-service-option:hover {
+    background: #f0f8ff;
+    border-color: #b6d7ff;
+}
+
+.wpbooking-option-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 0;
+    font-weight: normal;
+    width: 100%;
+}
+
+.wpbooking-option-label input[type="radio"] {
+    margin-right: 10px;
+    transform: scale(1.1);
+    accent-color: #0066cc;
+}
+
+.wpbooking-option-text {
+    color: #2c5aa0;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.wpbooking-service-option:has(input:checked) {
+    background: #e6f3ff;
+    border-color: #66b3ff;
+}
+
+/* Fallback para navegadores sin soporte :has() */
+.wpbooking-service-option input[type="radio"]:checked {
+    accent-color: #0066cc;
+}
+
+.wpbooking-service-option input[type="radio"]:checked + .wpbooking-option-text {
+    color: #004080;
+    font-weight: 600;
+}
+

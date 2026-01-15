@@ -84,5 +84,16 @@ return [
     'Total days' => 'Total de dies',
     'You must select a date range and enter a number plate' => 'Heu de seleccionar un interval de dates i introduir una matrícula',
     'Buy Parking' => 'Comprar Aparcament',
-    'Order' => 'Ordre'
+    'Order' => 'Ordre',
+    'Service Options' => 'Opcions del Servei',
+    'Display Settings' => 'Configuració de Visualització',
+    'Description' => 'Descripció',
+    'Remove' => 'Eliminar',
+    'Add Option' => 'Afegir Opció',
+    'Options with empty description will not be displayed. Price 0 will show as "Free"' => 'Les opcions sense descripció no es mostraran. Preu 0 es mostrarà com "Gratuït"',
+    'e.g. Premium option' => 'p.ex. Opció premium',
+    'Show service price' => 'Mostrar preu del servei',
+    'Show quantity selector' => 'Mostrar selector de quantitat',
+    'Uncheck to hide price or quantity controls' => 'Desmarcar per ocultar controls de preu o quantitat',
+    'Options' => 'Opcions'
 ];

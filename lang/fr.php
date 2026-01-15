@@ -84,5 +84,16 @@ return [
     'Total days' => 'Nombre total de jours',
     'You must select a date range and enter a number plate' => 'Vous devez sélectionner une plage de dates et saisir une plaque d\'immatriculation',
     'Buy Parking' => 'Acheter le stationnement',
-    'Order' => 'Commande'
+    'Order' => 'Commande',
+    'Service Options' => 'Options du Service',
+    'Display Settings' => 'Paramètres d\'Affichage',
+    'Description' => 'Description',
+    'Remove' => 'Supprimer',
+    'Add Option' => 'Ajouter Option',
+    'Options with empty description will not be displayed. Price 0 will show as "Free"' => 'Les options sans description ne seront pas affichées. Le prix 0 s\'affichera comme "Gratuit"',
+    'e.g. Premium option' => 'ex. Option premium',
+    'Show service price' => 'Afficher le prix du service',
+    'Show quantity selector' => 'Afficher le sélecteur de quantité',
+    'Uncheck to hide price or quantity controls' => 'Décocher pour masquer les contrôles de prix ou de quantité',
+    'Options' => 'Options'
 ];

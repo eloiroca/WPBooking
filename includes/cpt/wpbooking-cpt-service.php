@@ -49,6 +49,22 @@ add_action('add_meta_boxes', function () {
         'wpbooking_service',
         'side'
     );
+    // Service Options
+    add_meta_box(
+        'wpbooking_service_options_metabox',
+        __wpb('Service Options'),
+        'wpbooking_service_options_metabox_callback',
+        'wpbooking_service',
+        'side'
+    );
+    // Display Settings
+    add_meta_box(
+        'wpbooking_service_display_metabox',
+        __wpb('Display Settings'),
+        'wpbooking_service_display_metabox_callback',
+        'wpbooking_service',
+        'side'
+    );
 });
 
 // Metabox eventos asignados
@@ -112,13 +128,134 @@ function wpbooking_service_qty_metabox_callback($post) {
     <?php
 }
 
+// Metabox service options
+function wpbooking_service_options_metabox_callback($post) {
+    if (wpbooking_is_translating_wpml($post->ID, 'wpbooking_service')) {
+        echo '<p style="color: #d63638; font-weight: bold;">' . esc_html(__wpb('Editing translation. These fields are managed from the primary language.')) . '</p>';
+        return;
+    }
+    
+    $options = get_post_meta($post->ID, '_service_options', true);
+    if (!is_array($options)) {
+        $options = [];
+    }
+    
+    wp_nonce_field('wpbooking_service_options_nonce', 'wpbooking_service_options_nonce');
+    ?>
+    <div id="service-options-container">
+        <?php foreach ($options as $index => $option): ?>
+            <div class="service-option-row" data-index="<?php echo $index; ?>">
+                <label><?php echo __wpb('Description'); ?>:</label>
+                <input type="text" name="service_options[<?php echo $index; ?>][description]" value="<?php echo esc_attr($option['description'] ?? ''); ?>" style="width:100%; margin-bottom: 5px;" placeholder="<?php echo __wpb('e.g. Premium option'); ?>">
+                
+                <label><?php echo __wpb('Price'); ?>:</label>
+                <input type="number" step="0.01" name="service_options[<?php echo $index; ?>][price]" value="<?php echo esc_attr($option['price'] ?? ''); ?>" style="width:100%; margin-bottom: 10px;" placeholder="0.00">
+                
+                <button type="button" class="button remove-option" onclick="removeServiceOption(this)">
+                    <?php echo __wpb('Remove'); ?>
+                </button>
+                <hr style="margin: 10px 0;">
+            </div>
+        <?php endforeach; ?>
+    </div>
+    
+    <button type="button" class="button button-secondary" onclick="addServiceOption()">
+        <?php echo __wpb('Add Option'); ?>
+    </button>
+    
+    <script>
+        let optionIndex = <?php echo count($options); ?>;
+        
+        function addServiceOption() {
+            const container = document.getElementById('service-options-container');
+            const row = document.createElement('div');
+            row.className = 'service-option-row';
+            row.dataset.index = optionIndex;
+            row.innerHTML = `
+                <label><?php echo __wpb('Description'); ?>:</label>
+                <input type="text" name="service_options[${optionIndex}][description]" style="width:100%; margin-bottom: 5px;" placeholder="<?php echo __wpb('e.g. Premium option'); ?>">
+                
+                <label><?php echo __wpb('Price'); ?>:</label>
+                <input type="number" step="0.01" name="service_options[${optionIndex}][price]" style="width:100%; margin-bottom: 10px;" placeholder="0.00">
+                
+                <button type="button" class="button remove-option" onclick="removeServiceOption(this)">
+                    <?php echo __wpb('Remove'); ?>
+                </button>
+                <hr style="margin: 10px 0;">
+            `;
+            container.appendChild(row);
+            optionIndex++;
+        }
+        
+        function removeServiceOption(button) {
+            button.closest('.service-option-row').remove();
+        }
+    </script>
+    
+    <p><small><?php echo __wpb('Options with empty description will not be displayed. Price 0 will show as "Free"'); ?></small></p>
+    <?php
+}
+
+// Metabox display settings
+function wpbooking_service_display_metabox_callback($post) {
+    if (wpbooking_is_translating_wpml($post->ID, 'wpbooking_service')) {
+        echo '<p style="color: #d63638; font-weight: bold;">' . esc_html(__wpb('Editing translation. These fields are managed from the primary language.')) . '</p>';
+        return;
+    }
+    
+    $show_price = get_post_meta($post->ID, '_show_price', true);
+    $show_quantity = get_post_meta($post->ID, '_show_quantity', true);
+    
+    // Default values
+    if ($show_price === '') $show_price = '1';
+    if ($show_quantity === '') $show_quantity = '1';
+    ?>
+    
+    <label>
+        <input type="checkbox" name="show_price" value="1" <?php checked($show_price, '1'); ?>>
+        <?php echo __wpb('Show service price'); ?>
+    </label><br><br>
+    
+    <label>
+        <input type="checkbox" name="show_quantity" value="1" <?php checked($show_quantity, '1'); ?>>
+        <?php echo __wpb('Show quantity selector'); ?>
+    </label>
+    
+    <p><small><?php echo __wpb('Uncheck to hide price or quantity controls'); ?></small></p>
+    <?php
+}
+
 // Guardar metadatos
 add_action('save_post_wpbooking_service', function ($post_id) {
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+    
+    // Verificar nonce para las opciones
+    if (!isset($_POST['wpbooking_service_options_nonce']) || 
+        !wp_verify_nonce($_POST['wpbooking_service_options_nonce'], 'wpbooking_service_options_nonce')) {
+        return;
+    }
 
     update_post_meta($post_id, '_price', sanitize_text_field($_POST['price'] ?? ''));
     update_post_meta($post_id, '_min', sanitize_text_field($_POST['min'] ?? ''));
     update_post_meta($post_id, '_max', sanitize_text_field($_POST['max'] ?? ''));
+    
+    // Guardar opciones del servicio
+    $service_options = [];
+    if (isset($_POST['service_options']) && is_array($_POST['service_options'])) {
+        foreach ($_POST['service_options'] as $option) {
+            if (!empty($option['description']) || !empty($option['price'])) {
+                $service_options[] = [
+                    'description' => sanitize_text_field($option['description'] ?? ''),
+                    'price' => sanitize_text_field($option['price'] ?? '0')
+                ];
+            }
+        }
+    }
+    update_post_meta($post_id, '_service_options', $service_options);
+    
+    // Guardar configuración de visualización
+    update_post_meta($post_id, '_show_price', isset($_POST['show_price']) ? '1' : '0');
+    update_post_meta($post_id, '_show_quantity', isset($_POST['show_quantity']) ? '1' : '0');
 
     $assigned = isset($_POST['assigned_events']) ? array_map('intval', $_POST['assigned_events']) : [];
     update_post_meta($post_id, '_assigned_events', $assigned);

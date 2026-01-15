@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WPBooking
  * Description: Plugin de reservas con calendario visual integrado con WooCommerce. Permite configurar disponibilidades, gestionar personas y servicios, y realizar pagos directamente desde el calendario.
- * Version: 1.0
+ * Version: 1.01
  * Author: Eloi
  * Author URI:        https://github.com/eloiroca/eloiroca
  */
@@ -10,7 +10,7 @@
 define("DIRECTORI_PLUGIN_WPBOOKING" , plugin_dir_path( __FILE__ ));
 define("URL_PLUGIN_WPBOOKING" , plugin_dir_url( __FILE__ ));
 
-define("ASSETS_VERSION_WPBOOKING", "1.0.0");
+define("ASSETS_VERSION_WPBOOKING", "1.0.6");
 
 //Language Definition
 add_action('plugins_loaded', function() {
