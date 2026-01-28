@@ -92,11 +92,12 @@ function registrar_estilos_scripts($hook = '') {
     wp_enqueue_script( 'script-wpbooking', URL_PLUGIN_WPBOOKING . 'assets/js/wpbooking.js', array('script-wpbooking-locale-calendar'), $versio, true );
 
 
-    // Variables to JavaScript
     $options = get_option('wpbooking_options', []);
+    $allow_past_events = !empty($options['allow_past_events']);
+
     wp_localize_script( 'script-wpbooking', 'WPBookingData', array(
         'ajax_url' => admin_url('admin-ajax.php'),
-        'start_calendar' => START_CALENDAR_WPBOOKING,
+        'start_calendar' => $allow_past_events ? null : START_CALENDAR_WPBOOKING,
         'end_calendar' => END_CALENDAR_WPBOOKING,
         'is_admin' => is_admin(),
         'lang' => LANG_WPBOOKING,
@@ -106,6 +107,7 @@ function registrar_estilos_scripts($hook = '') {
         'error_dates_and_plate_number' => __wpb('You must select a date range and enter a number plate'),
         'show_modal_on_click' => !empty($options['show_modal_on_click']),
         'block_current_day' => !empty($options['block_current_day']),
+        'allow_past_events' => !empty($options['allow_past_events']),
     ));
 
 }

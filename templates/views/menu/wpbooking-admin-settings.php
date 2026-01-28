@@ -47,6 +47,13 @@ $options = get_option('wpbooking_options', []);
                 </td>
             </tr>
             <tr valign="top">
+                <th scope="row"><?php echo __wpb('Allow adding and showing past events') ?></th>
+                <td>
+                    <input type="checkbox" name="wpbooking_options[allow_past_events]" value="1"
+                        <?php checked(1, $options['allow_past_events'] ?? 0); ?> />
+                </td>
+            </tr>
+            <tr valign="top">
                 <th scope="row"><?php echo __wpb('Multiply person price by quantity'); ?></th>
                 <td>
                     <input type="checkbox" name="wpbooking_options[multiply_price_qty]" value="1"

@@ -30,6 +30,7 @@ function wpbooking_get_events($request) {
     $events = get_option('wpbooking_events', []);
     $options = get_option('wpbooking_options', []);
     $split_events = !$is_admin && !empty($options['individual_days']);
+    $allow_past_events = !empty($options['allow_past_events']);
     $block_current_day = !empty($options['block_current_day']);
     $show_modal_on_click = !empty($options['show_modal_on_click']);
 
@@ -57,7 +58,7 @@ function wpbooking_get_events($request) {
         $event_end = $event['end'] ?: $event_start;
 
         // Ignorar eventos ya pasados (end es a las 00:00, así que el mismo día ya está pasado)
-        if ($event_end <= date('Y-m-d')) continue;
+        if (!$allow_past_events && $event_end <= date('Y-m-d')) continue;
 
         // Ignorar si no está en el rango
         if ($event_start > $end || $event_end < $start) continue;
@@ -128,6 +129,8 @@ function wpbooking_save_event($request) {
     try {
         $params = $request->get_json_params();
         $events = get_option('wpbooking_events', []);
+        $options = get_option('wpbooking_options', []);
+        $allow_past_events = !empty($options['allow_past_events']);
 
         // Asegurar que sea un array
         if (!is_array($events)) {
@@ -138,7 +141,7 @@ function wpbooking_save_event($request) {
         $post_id = $params['eventPostId'] ?? '';
 
         // Validar fecha en pasado
-        if ($start_date && strtotime($start_date) < strtotime('today')) {
+        if (!$allow_past_events && $start_date && strtotime($start_date) < strtotime('today')) {
             return rest_ensure_response([
                 'success' => false,
                 'message' => __wpb('Start date cannot be in the past'),

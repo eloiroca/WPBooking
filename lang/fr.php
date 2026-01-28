@@ -98,6 +98,7 @@ return [
     'Options' => 'Options',
     'Show modal with event information instead of the event page' => 'Afficher une fenêtre modale avec les informations de l\'événement au lieu de la page de l\'événement',
     'Show "no availability" modal for today' => 'Afficher la fenêtre modale "aucune disponibilité" pour aujourd\'hui',
+    'Allow adding and showing past events' => 'Autoriser l\'ajout et l\'affichage d\'événements passés',
     'Start' => 'Début',
     'End' => 'Fin'
 ];
