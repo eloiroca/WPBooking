@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const eventDate = new Date(info.event.start);
                 eventDate.setHours(0,0,0,0);
 
-                if (WPBookingData.show_today_modal && eventDate <= today) {
+                if (WPBookingData.block_current_day && eventDate <= today) {
                     info.jsEvent.preventDefault(); // Evita que siga el enlace
                     MicroModal.show('modal-wpbooking-exhausted');
                     return;

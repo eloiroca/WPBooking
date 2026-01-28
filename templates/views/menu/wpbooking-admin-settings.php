@@ -73,13 +73,6 @@ $options = get_option('wpbooking_options', []);
                         <?php checked(1, $options['show_modal_on_click'] ?? 0); ?> />
                 </td>
             </tr>
-            <tr valign="top">
-                <th scope="row"><?php echo __wpb('Show "no availability" modal for today'); ?></th>
-                <td>
-                    <input type="checkbox" name="wpbooking_options[show_today_modal]" value="1"
-                        <?php checked(1, $options['show_today_modal'] ?? 0); ?> />
-                </td>
-            </tr>
         </table>
         <?php submit_button(); ?>
     </form>
