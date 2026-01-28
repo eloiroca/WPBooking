@@ -14,8 +14,10 @@ $eventos = get_posts([
 $eventos_filtrados = [];
 
 foreach ($eventos as $evento) {
-    $lang = apply_filters('wpml_post_language_details', null, $evento->ID);
-    if (is_wp_error($lang) || !$lang || !isset($lang['language_code']) || $lang['language_code'] !== $slave_lang) continue;
+    if (defined('ICL_SITEPRESS_VERSION') && !empty($slave_lang)) {
+        $lang = apply_filters('wpml_post_language_details', null, $evento->ID);
+        if (is_wp_error($lang) || !$lang || !isset($lang['language_code']) || $lang['language_code'] !== $slave_lang) continue;
+    }
 
     // Título traducido si existe
     $translated_id = apply_filters('wpml_object_id', $evento->ID, 'wpbooking_event', true, $current_lang);

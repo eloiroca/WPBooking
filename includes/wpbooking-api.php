@@ -43,9 +43,11 @@ function wpbooking_get_events($request) {
         $postId = $event['eventPostId'] ?? false;
         if (!$postId) continue;
 
-        // Filtrar por idioma esclavo
-        $lang = apply_filters('wpml_post_language_details', null, $postId);
-        if (is_wp_error($lang) || !$lang || !isset($lang['language_code']) || $lang['language_code'] !== $slave_lang) continue;
+        // Filtrar por idioma esclavo si WPML está activo
+        if (defined('ICL_SITEPRESS_VERSION') && !empty($slave_lang)) {
+            $lang = apply_filters('wpml_post_language_details', null, $postId);
+            if (is_wp_error($lang) || !$lang || !isset($lang['language_code']) || $lang['language_code'] !== $slave_lang) continue;
+        }
 
         // Ignorar si no está habilitado
         $enabled = get_post_meta($postId, '_enabled', true);

@@ -80,8 +80,10 @@ function wpbooking_person_events_metabox_callback($post) {
 
     echo '<div style="max-height: 150px; overflow-y: auto;">';
     foreach ($events as $event) {
-        $lang = apply_filters('wpml_post_language_details', null, $event->ID);
-        if (is_wp_error($lang) || !$lang || !isset($lang['language_code']) || $lang['language_code'] !== $slave_lang) continue;
+        if (defined('ICL_SITEPRESS_VERSION') && !empty($slave_lang)) {
+            $lang = apply_filters('wpml_post_language_details', null, $event->ID);
+            if (is_wp_error($lang) || !$lang || !isset($lang['language_code']) || $lang['language_code'] !== $slave_lang) continue;
+        }
 
         $checked = in_array($event->ID, $selected_events) ? 'checked' : '';
         echo '<label style="display:block;margin-bottom:4px;">';
