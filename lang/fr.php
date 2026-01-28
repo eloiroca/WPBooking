@@ -95,5 +95,9 @@ return [
     'Show service price' => 'Afficher le prix du service',
     'Show quantity selector' => 'Afficher le sélecteur de quantité',
     'Uncheck to hide price or quantity controls' => 'Décocher pour masquer les contrôles de prix ou de quantité',
-    'Options' => 'Options'
+    'Options' => 'Options',
+    'Show modal with event information instead of the event page' => 'Afficher une fenêtre modale avec les informations de l\'événement au lieu de la page de l\'événement',
+    'Show "no availability" modal for today' => 'Afficher la fenêtre modale "aucune disponibilité" pour aujourd\'hui',
+    'Start' => 'Début',
+    'End' => 'Fin'
 ];

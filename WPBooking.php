@@ -93,6 +93,7 @@ function registrar_estilos_scripts($hook = '') {
 
 
     // Variables to JavaScript
+    $options = get_option('wpbooking_options', []);
     wp_localize_script( 'script-wpbooking', 'WPBookingData', array(
         'ajax_url' => admin_url('admin-ajax.php'),
         'start_calendar' => START_CALENDAR_WPBOOKING,
@@ -103,6 +104,8 @@ function registrar_estilos_scripts($hook = '') {
         'error_message' => __wpb('An error occurred while saving the event'),
         'error_select_person_or_service' => __wpb('You must select at least one person or service'),
         'error_dates_and_plate_number' => __wpb('You must select a date range and enter a number plate'),
+        'show_modal_on_click' => !empty($options['show_modal_on_click']),
+        'show_today_modal' => !empty($options['show_today_modal']),
     ));
 
 }

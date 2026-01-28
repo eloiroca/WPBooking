@@ -31,6 +31,7 @@ function wpbooking_get_events($request) {
     $options = get_option('wpbooking_options', []);
     $split_events = !$is_admin && !empty($options['individual_days']);
     $block_current_day = !empty($options['block_current_day']);
+    $show_modal_on_click = !empty($options['show_modal_on_click']);
 
     $slave_lang = $options['slave_language'] ?? null;
     $current_lang = sanitize_text_field($request->get_param('lang')) ?: null;
@@ -97,7 +98,7 @@ function wpbooking_get_events($request) {
 
                 if (!$is_admin && $postId) {
                     $can_reserve = get_post_meta($postId, '_can_reserve', true);
-                    if ($can_reserve == '1' && !($block_current_day && $e['start'] === $today)) {
+                    if ($can_reserve == '1' && !($block_current_day && $e['start'] === $today) && !$show_modal_on_click) {
                         $e['url'] = get_permalink($postId) . '?d=' . wpbooking_encrypt_date($e['start']);
                     }
                 }
@@ -108,7 +109,7 @@ function wpbooking_get_events($request) {
         } else {
             if (!$is_admin && $postId) {
                 $can_reserve = get_post_meta($postId, '_can_reserve', true);
-                if ($can_reserve == '1' && !($block_current_day && $event_start === $today)) {
+                if ($can_reserve == '1' && !($block_current_day && $event_start === $today) && !$show_modal_on_click) {
                     $event['url'] = get_permalink($postId) . '?d=' . wpbooking_encrypt_date($event_start);
                 }
             }

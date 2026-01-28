@@ -138,11 +138,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 const eventDate = new Date(info.event.start);
                 eventDate.setHours(0,0,0,0);
 
-                if (eventDate <= today) {
+                if (WPBookingData.show_today_modal && eventDate <= today) {
                     info.jsEvent.preventDefault(); // Evita que siga el enlace
                     MicroModal.show('modal-wpbooking-exhausted');
                     return;
                 }
+
+                if (WPBookingData.show_modal_on_click) {
+                    info.jsEvent.preventDefault();
+
+                    document.getElementById('modal-wpbooking-event-details-title').innerText = info.event.title;
+
+                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                    document.getElementById('wpbooking-event-start').innerText = info.event.start.toLocaleDateString(WPBookingData.lang, options);
+
+                    if (info.event.end) {
+                        let endDate = new Date(info.event.end);
+                        if (info.event.allDay) {
+                            endDate.setDate(endDate.getDate() - 1);
+                        }
+                        document.getElementById('wpbooking-event-end').innerText = endDate.toLocaleDateString(WPBookingData.lang, options);
+                    } else {
+                        document.getElementById('wpbooking-event-end').innerText = info.event.start.toLocaleDateString(WPBookingData.lang, options);
+                    }
+
+                    MicroModal.show('modal-wpbooking-event-details');
+                    return;
+                }
+
                 return; // Permitir que el enlace se abra si es una fecha futura
             }
 

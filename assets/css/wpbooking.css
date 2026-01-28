@@ -541,3 +541,50 @@
     font-weight: 600;
 }
 
+/* LISTADO DE EVENTOS (SHORTCODE) */
+.wpbooking-calendar-list-wrapper {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+.wpbooking-event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.wpbooking-event-item {
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 15px;
+}
+.wpbooking-event-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+.wpbooking-event-item-title {
+    margin: 0 0 8px 0 !important;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+.wpbooking-event-item-title a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.wpbooking-event-item-title a:hover {
+    color: #77a464;
+}
+.wpbooking-event-item-dates {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.9em;
+    color: #666;
+}
+.wpbooking-event-date-start strong,
+.wpbooking-event-date-end strong {
+    color: #444;
+}
+
