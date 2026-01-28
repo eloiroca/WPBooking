@@ -100,5 +100,6 @@ return [
     'Show "no availability" modal for today' => 'Afficher la fenêtre modale "aucune disponibilité" pour aujourd\'hui',
     'Allow adding and showing past events' => 'Autoriser l\'ajout et l\'affichage d\'événements passés',
     'Start' => 'Début',
-    'End' => 'Fin'
+    'End' => 'Fin',
+    'Coming Soon' => 'À venir'
 ];

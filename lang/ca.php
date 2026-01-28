@@ -100,5 +100,6 @@ return [
     'Show "no availability" modal for today' => 'Mostrar modal de "no hi ha disponibilitat" per avui',
     'Allow adding and showing past events' => 'Permetre afegir i mostrar esdeveniments passats',
     'Start' => 'Inici',
-    'End' => 'Fi'
+    'End' => 'Fi',
+    'Coming Soon' => 'Pròximament'
 ];

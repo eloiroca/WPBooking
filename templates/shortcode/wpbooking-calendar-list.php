@@ -65,6 +65,7 @@ usort($filtered_events, function($a, $b) {
         <?php if (empty($filtered_events)): ?>
             <p><?php echo __wpb('No events found'); ?></p>
         <?php else: ?>
+            <h2 class="wpbooking-calendar-list-title"><?php echo __wpb('Coming Soon'); ?></h2>
             <?php foreach ($filtered_events as $event): ?>
                 <?php
                 $start_fmt = date_i18n(get_option('date_format'), $event['start_date_obj']->getTimestamp());
