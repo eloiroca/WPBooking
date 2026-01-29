@@ -22,10 +22,7 @@ foreach ($events as $event) {
     if ($enabled !== '1') continue;
 
     $event_start = $event['start'] ?? '';
-    // Ignorar eventos que no tienen fecha de fin
-    if (empty($event['end'])) continue;
-
-    $event_end = $event['end'];
+    $event_end = $event['end'] ?: $event_start;
 
     // Ignorar eventos ya pasados
     if ($event_end < $today) continue;
@@ -58,6 +55,12 @@ foreach ($events as $event) {
 usort($filtered_events, function($a, $b) {
     return strcmp($a['start'], $b['start']);
 });
+
+// Limitar a máximo 6 eventos próximos
+$max_events = 6;
+if (count($filtered_events) > $max_events) {
+    $filtered_events = array_slice($filtered_events, 0, $max_events);
+}
 ?>
 
 <div class="wpbooking-calendar-list-wrapper">
@@ -69,10 +72,25 @@ usort($filtered_events, function($a, $b) {
             <?php foreach ($filtered_events as $event): ?>
                 <?php
                 $start_fmt = date_i18n(get_option('date_format'), $event['start_date_obj']->getTimestamp());
-                $end_fmt = date_i18n(get_option('date_format'), $event['end_date_obj']->getTimestamp());
+                // usar fecha de fin si está explícita, si no usar la fecha de inicio como fecha final
+                $end_date_obj_for_display = (isset($event['end']) && $event['end'] !== '') ? $event['end_date_obj'] : $event['start_date_obj'];
+                $end_fmt = date_i18n(get_option('date_format'), $end_date_obj_for_display->getTimestamp());
+
+                // Obtener horas desde los metas del post asociado (si existe)
+                $post_id_for_meta = $event['eventPostId'] ?? ($event['post_id'] ?? null);
+                $hour_start_meta = $post_id_for_meta ? get_post_meta($post_id_for_meta, '_hour_start', true) : '';
+                $hour_end_meta = $post_id_for_meta ? get_post_meta($post_id_for_meta, '_hour_end', true) : '';
+                // si no hay hora de fin, usar la de inicio
+                $hour_end_for_display = ($hour_end_meta !== '' && $hour_end_meta !== null) ? $hour_end_meta : $hour_start_meta;
+
+                // Construir cadenas de fecha+hora para mostrar
+                $start_display = $start_fmt . ($hour_start_meta ? ' ' . esc_html($hour_start_meta) : '');
+                $end_display = $end_fmt . ($hour_end_for_display ? ' ' . esc_html($hour_end_for_display) : '');
 
                 // Si es el mismo día, solo mostrar una fecha
-                $is_same_day = $event['start'] === $event['end'] || empty($event['end']);
+                // Mostrar la fecha final incluso si no existe (se toma la fecha de inicio).
+                // Consideramos 'mismo día' solo si la fecha de fin está explícitamente provista y es igual a la de inicio.
+                $is_same_day = isset($event['end']) && $event['end'] !== '' && ($event['start'] === $event['end']);
                 ?>
                 <div class="wpbooking-event-item">
                     <h4 class="wpbooking-event-item-title">
@@ -82,11 +100,11 @@ usort($filtered_events, function($a, $b) {
                     </h4>
                     <div class="wpbooking-event-item-dates">
                         <span class="wpbooking-event-date-start">
-                            <strong><?php echo __wpb('Start'); ?>:</strong> <?php echo $start_fmt; ?>
+                            <strong><?php echo __wpb('Start'); ?>:</strong> <?php echo $start_display; ?>
                         </span>
                         <?php if (!$is_same_day): ?>
                             <span class="wpbooking-event-date-end">
-                                <strong><?php echo __wpb('End'); ?>:</strong> <?php echo $end_fmt; ?>
+                                <strong><?php echo __wpb('End'); ?>:</strong> <?php echo $end_display; ?>
                             </span>
                         <?php endif; ?>
                     </div>
