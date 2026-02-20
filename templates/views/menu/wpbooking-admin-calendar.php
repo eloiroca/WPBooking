@@ -42,13 +42,13 @@ foreach ($eventos as $evento) {
                 $textColor = get_post_meta($evento->ID, '_text_color', true) ?: '#000000';
                 ?>
                 <div class="fc-event"
-                     data-event='<?= json_encode([
+                     data-event='<?= esc_attr( wp_json_encode([
                          'type' => 'wpbooking_event',
                          'title' => $title,
                          'color' => $color,
                          'textColor' => $textColor,
                          'eventPostId' => $evento->ID,
-                     ]) ?>'
+                     ]) ) ?>'
                      style="background-color: <?= esc_attr($color) ?>; color: <?= esc_attr($textColor) ?>;">
                     <?= esc_html($title) ?>
                 </div>
