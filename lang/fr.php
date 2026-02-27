@@ -101,5 +101,6 @@ return [
     'Allow adding and showing past events' => 'Autoriser l\'ajout et l\'affichage d\'événements passés',
     'Start' => 'Début',
     'End' => 'Fin',
-    'Coming Soon' => 'À venir'
+    'Coming Soon' => 'À venir',
+    'Price per ticket' => 'Prix par billet'
 ];

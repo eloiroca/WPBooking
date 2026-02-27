@@ -137,6 +137,9 @@ while (have_posts()) : the_post();
                 // Default values si no están configurados
                 if ($show_price === '') $show_price = '1';
                 if ($show_quantity === '') $show_quantity = '1';
+
+                // Obtener si el precio del servico es por persona
+                $price_per_ticket = get_post_meta($service_id, '_price_per_ticket', true);
                 
                 $precio_texto = $precio == 0 ? __wpb('Free') : number_format($precio, 2) . ' €';
 
@@ -151,7 +154,7 @@ while (have_posts()) : the_post();
                     return !empty($option['description']);
                 });
 
-                echo '<div class="wpbooking-service-row radio" data-id="' . esc_attr($service_id) . '" data-price="' . esc_attr($precio) . '">';
+                echo '<div class="wpbooking-service-row radio" data-id="' . esc_attr($service_id) . '" data-price="' . esc_attr($precio) . '" data-price-per-ticket="' . esc_attr($price_per_ticket) . '">';
                 echo '<div class="wpbooking-service-header">';
                 
                 // Mostrar título con o sin precio
@@ -264,6 +267,7 @@ echo '<div>' . get_the_content() . '</div>';
     <script>
         jQuery(document).ready(function ($) {
             const wpbMultiplyPrice = <?php echo $multiply_price; ?>;
+            const wpbMultiplyServicePrice = <?php echo $multiply_service_price_qty; ?>;
 
             function updateTotal() {
                 let totalPersons = 0;
@@ -285,9 +289,16 @@ echo '<div>' . get_the_content() . '</div>';
                     const qtyInput = $(this).find('input[type="number"], .wpb-service-hidden-qty');
                     const qty = parseInt(qtyInput.val()) || 0;
                     const price = parseFloat($(this).data('price')) || 0;
+                    const pricePerTicket = $(this).attr('data-price-per-ticket');
 
                     totalServices += qty;
-                    totalPrice += wpbMultiplyPrice ? qty * price : (qty > 0 ? price : 0);
+                    if (pricePerTicket === '1') {
+                        // Precio por persona: multiplicar por el total de personas
+                        totalPrice += qty * price * totalPersons;
+                    } else {
+                        // Precio fijo: usar el multiplicador global de servicios o precio fijo según configuración
+                        totalPrice += wpbMultiplyServicePrice ? qty * price : (qty > 0 ? price : 0);
+                    }
 
                     // Calcular precio de las opciones seleccionadas
                     const selectedOption = $(this).find('.wpb-service-option:checked');

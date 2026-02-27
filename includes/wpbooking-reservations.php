@@ -33,7 +33,9 @@ function wpbooking_add_to_cart_handler() {
     $detalle[] = '<b>' . __wpb('Hour start') . '</b>: ' . get_post_meta($event_id, '_hour_start', true);
     $detalle[] = '<b>' . __wpb('Hour end') . '</b>: ' . get_post_meta($event_id, '_hour_end', true);
 
+    $total_persons_count = 0;
     foreach ($personas as $id => $qty) {
+        $total_persons_count += intval($qty);
         $qty = intval($qty);
         if ($qty < 1) continue;
         $precio = floatval(get_post_meta($id, '_price', true));
@@ -46,7 +48,15 @@ function wpbooking_add_to_cart_handler() {
         $qty = intval($qty);
         if ($qty < 1) continue;
         $precio = floatval(get_post_meta($id, '_price', true));
-        $line_total = $multiply_service_price ? ($precio * $qty) : $precio;
+        $price_per_ticket = get_post_meta($id, '_price_per_ticket', true);
+
+        if ($price_per_ticket === '1') {
+            $multiplier = $qty * $total_persons_count;
+        } else {
+            $multiplier = $multiply_service_price ? $qty : 1;
+        }
+        
+        $line_total = $precio * $multiplier;
         $total_price += $line_total;
         
         // Verificar si hay opción seleccionada

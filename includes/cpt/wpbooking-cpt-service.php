@@ -109,8 +109,14 @@ function wpbooking_service_price_metabox_callback($post) {
         return;
     }
     $price = get_post_meta($post->ID, '_price', true);
+    $price_per_ticket = get_post_meta($post->ID, '_price_per_ticket', true);
     ?>
     <input type="number" step="0.01" name="price" value="<?= esc_attr($price); ?>" style="width:100%;">
+    <br><br>
+    <label>
+        <input type="checkbox" name="price_per_ticket" value="1" <?php checked($price_per_ticket, '1'); ?>>
+        <?php echo __wpb('Price per ticket'); ?>
+    </label>
     <?php
 }
 
@@ -238,6 +244,7 @@ add_action('save_post_wpbooking_service', function ($post_id) {
     }
 
     update_post_meta($post_id, '_price', sanitize_text_field($_POST['price'] ?? ''));
+    update_post_meta($post_id, '_price_per_ticket', isset($_POST['price_per_ticket']) ? '1' : '0');
     update_post_meta($post_id, '_min', sanitize_text_field($_POST['min'] ?? ''));
     update_post_meta($post_id, '_max', sanitize_text_field($_POST['max'] ?? ''));
     
